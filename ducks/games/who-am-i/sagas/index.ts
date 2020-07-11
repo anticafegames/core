@@ -1,0 +1,43 @@
+import { put, call, fork, select } from 'redux-saga/effects'
+import { STOP_GAME_SUCCESS, RECONNECT_GAME_SUCCESS, socketPrefix } from '../constants'
+import { iReconnectGameState } from '../../../games-common/entity/interface'
+import { iReconnectState, iReconnectStateResponce, iGameState } from '../entity/interface'
+import { iGameUser } from '../entity/game-user-entity'
+import { convertResponceGameUser, convertReconnectStateResponce } from '../entity/converter'
+import showBoard from '../../../../code/games/who-am-i/show-modal-select-name'
+import { socketEmit } from '../../../../code/socket/socket-emit'
+import { closeElement } from '../../../modal/index'
+import { bindSocketEvents } from './bind-socket-events'
+import { gameStateSelector } from '..'
+
+export function* stopGameSuccess() {
+
+    const gameState: iGameState = yield select(gameStateSelector)
+
+    yield put({
+        type: STOP_GAME_SUCCESS 
+    })
+
+    if(gameState === 'prepare') {
+        yield put(closeElement())
+    }
+}
+
+export function* reconnectGame(reconnectState: iReconnectGameState) {
+
+    yield call(bindSocketEvents)
+    
+    const stateResponce: iReconnectStateResponce = reconnectState.state
+    const state: iReconnectState = yield call(convertReconnectStateResponce, stateResponce)
+
+    yield put({
+        type: RECONNECT_GAME_SUCCESS,
+        payload: { state }
+    })
+    
+    if(state.gameState === 'prepare') {
+        yield put(showBoard())
+    }
+
+    return 
+}
