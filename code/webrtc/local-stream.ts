@@ -1,9 +1,10 @@
 import LocalStorage from '../local-storage'
 import { iDeviceSettings } from '../../ducks/webrtc-devices/entity/interface'
+import { call } from 'redux-saga/effects'
 
-export const streamConstraints = (): MediaStreamConstraints => {
+export const streamConstraints = async (): Promise<MediaStreamConstraints> => {
 
-    const streamConstraints: iDeviceSettings = LocalStorage.getObjectFromStorage('streamConstraints')
+    const streamConstraints: iDeviceSettings = await LocalStorage.getObjectFromStorage('streamConstraints')
 
     return {
         "audio": {

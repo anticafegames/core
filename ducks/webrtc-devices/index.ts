@@ -183,12 +183,12 @@ export function* loadSettingsSaga() {
         const audioInputDevices = devices.filter(device => device.kind === 'audioinput')
         const videoInputDevices = devices.filter(device => device.kind === 'videoinput')
 
-        const deviceSettings = LocalStorage.getObjectFromStorage('streamConstraints') || {}
+        const deviceSettings = yield call(LocalStorage.getObjectFromStorage, 'streamConstraints') || {}
 
         const selectedAudioInputDeviceId = deviceSettings.audioinput || ''
         const selectedVideoInputDeviceId = deviceSettings.videoinput || ''
         
-        const stream: MediaStream = yield navigator.mediaDevices.getUserMedia(streamConstraints())
+        const stream: MediaStream = yield navigator.mediaDevices.getUserMedia(yield call(streamConstraints))
 
         yield put({
             type: LOAD_SETTINGS_SUCCESS,
@@ -247,7 +247,7 @@ export function* changeDevicesSaga({ payload }: any) {
         const [newTrack] = newStream[trackGetterKey]()
         stream.addTrack(newTrack)
 
-        let newDeviceSettings = LocalStorage.getObjectFromStorage('streamConstraints')
+        let newDeviceSettings = yield call(LocalStorage.getObjectFromStorage, 'streamConstraints')
 
         if(!newDeviceSettings) {
             newDeviceSettings = { [kind]: id }

@@ -102,7 +102,7 @@ function* checkLoginAction() {
 
 function* checkLoginWeb(query: any) {
 
-    const token = LocalStorage.getObjectFromStorage('anticafeToken')
+    const token = yield call(LocalStorage.getObjectFromStorage, 'anticafeToken')
 
     if (token) {
         return yield call(Api.POST, 'verify-anticafe-token', { token, appKey: 'web' })

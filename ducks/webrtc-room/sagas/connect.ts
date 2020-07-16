@@ -21,7 +21,6 @@ import { connectToRoom } from "../action-creaters/connect"
 import showModalRoomJoin from "../../../code/modals/room-join"
 import { reconnectGame } from '../../games-common/sagas/start-game'
 
-import RoomJoinFormPage from '../../../components/room-list-page/find-room-block/room-join-form'
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
 
 export function* roomConnectSocketRequestSaga({ payload }: any) {
@@ -199,7 +198,7 @@ export function* checkReconnectRoom() {
         return
     }
 
-    const roomToken = LocalStorage.getObjectFromStorage('room-token')
+    const roomToken = yield call(LocalStorage.getObjectFromStorage, 'room-token')
 
     if (!roomToken) return
 
@@ -212,11 +211,11 @@ export function* checkReconnectRoom() {
 
     yield call(waitAuthentication, false, false)
     if (!(yield select(isAuthorizedSelector))) {
-        return yield error('Ошибка аутентификация')
+        return yield console.log('Ошибка аутентификации')
     }
 
     if (!(yield call(createLocalStreamSaga))) {
-        return yield error('Не смогли создать local stream')
+        return yield error('Не смогли подключиться к камере')
     }
 
     yield call(waitBindSocket, ROOM_CONNECT_SOCKET_EVENT)

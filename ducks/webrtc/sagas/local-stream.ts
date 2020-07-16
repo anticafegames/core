@@ -10,9 +10,9 @@ import { errorSagaKey, waitSuccess } from "../../../code/ducks/saga-helper"
 import { streamConstraints } from '../../../code/webrtc/local-stream'
 
 
-const createLocalStream = () => {
+const createLocalStream = async () => {
 
-    const constraints = streamConstraints()
+    const constraints = await streamConstraints()
 
     const promise = new Promise(async (resolve, reject) => {
 
