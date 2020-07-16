@@ -4,7 +4,6 @@ import { CREATE_LOCAL_STREAM_SUCCESS, localStreamSelector, CLOSE_LOCAL_STREAM_SU
 
 import { iResultRequest } from "../../../interfaces"
 import { infoMessage, errorMessage } from "../../../code/messages"
-import { waitAuthentication } from "../../../code/api/vk-api/vk-api-helper"
 import { delay } from "redux-saga"
 import { errorSagaKey, waitSuccess } from "../../../code/ducks/saga-helper"
 import { streamConstraints } from '../../../code/webrtc/local-stream'

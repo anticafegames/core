@@ -13,7 +13,7 @@ import Api from '../../code/api'
 import { refreshAccessToken } from '../../code/api/auth'
 import LocalStorage from '../../code/local-storage'
 import { errorMessage } from '../../code/messages'
-import { waitAuthentication, login } from '../../code/api/vk-api/vk-api-helper'
+import Auth from '../../code/api/vk-api/vk-api-helper'
 import { iAuthVkResponse } from './entity/interface'
 import { iSession } from './entity/auth-session-entity'
 import VKApi from '../../code/api/vk-api/vk-api'
@@ -121,7 +121,7 @@ const socketActions: iSocketAction[] = [
 
 export function* logInSaga() {
 
-    yield call(waitAuthentication, false, false)
+    yield call(Auth.waitAuthentication, false, false)
 
     const token: string = yield select(anticafeTokenSelector)
     
@@ -129,7 +129,7 @@ export function* logInSaga() {
         return true
     }
     
-    return yield call(login, 'login')
+    return yield call(Auth.login, 'login')
 }
 
 export function* logOutSaga() {
@@ -141,7 +141,7 @@ export function* logOutSaga() {
 }
 
 export function* vkAuthInit() {
-    yield call(login, 'check')
+    yield call(Auth.login, 'check')
     yield call(hidePreloader, 'firstpreloader')
 }
 

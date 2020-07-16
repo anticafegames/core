@@ -9,7 +9,7 @@ import { waitBindSocket, bindSocketEvents, getSagaKeyUnbindSocket } from '../../
 import { logInSaga, userIdSelector, isAuthorizedSelector } from '../../authentication'
 import VKApi from '../../../code/api/vk-api/vk-api'
 import LocalStorage from '../../../code/local-storage'
-import { waitAuthentication } from '../../../code/api/vk-api/vk-api-helper'
+import Auth from '../../../code/api/vk-api/vk-api-helper'
 import createLocalStreamSaga, { waitLocalStream, } from '../../webrtc/sagas/local-stream'
 import { querySelector, hashSelector } from '../../router'
 import { showGlobalPreloader, getHidePreloaderSagaKey, hidePreloader } from '../../global-preloader'
@@ -209,7 +209,7 @@ export function* checkReconnectRoom() {
         return yield call(hidePreloader, 'connet_room')
     }
 
-    yield call(waitAuthentication, false, false)
+    yield call(Auth.waitAuthentication, false, false)
     if (!(yield select(isAuthorizedSelector))) {
         return yield console.log('Ошибка аутентификации')
     }

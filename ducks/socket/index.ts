@@ -8,7 +8,6 @@ import { todo, infoMessage } from '../../code/messages'
 import { socketUrl, appName } from '../../config/app-config'
 
 import { getSocketType } from '../../code/socket'
-import { waitAuthentication } from '../../code/api/vk-api/vk-api-helper'
 import Api from '../../code/api'
 import MainEntity from './entity/main-entity'
 

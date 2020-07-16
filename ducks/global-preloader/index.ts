@@ -8,13 +8,6 @@ import { hash, guid } from '../../code/hash'
 
 declare const VK: any
 
-import Api from '../../code/api'
-import { refreshAccessToken } from '../../code/api/auth'
-import LocalStorage from '../../code/local-storage'
-import { errorMessage } from '../../code/messages'
-import { waitAuthentication, login } from '../../code/api/vk-api/vk-api-helper'
-import VKApi from '../../code/api/vk-api/vk-api'
-import { loadUserSaga } from '../user'
 import Store, { iMainEntity } from './entity/main-entity'
 import { delay } from 'redux-saga'
 import PreloaderEntity, { iPreloader, firstPreloaderParams } from './entity/preloader-entity'
