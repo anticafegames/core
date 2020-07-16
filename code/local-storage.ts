@@ -2,16 +2,18 @@ import { localstorageKey } from '../config/app-config'
 
 export default class LocalStorage {
 
-    static setObjectToStorage(object: any, prefix: string) {
-        localStorage.setItem(`${localstorageKey}-${prefix}`, JSON.stringify(object))
+    static setObjectToStorage: (object: any, prefix: string) => Promise<any> = async (object: any, prefix: string) => {
+        await localStorage.setItem(`${localstorageKey}-${prefix}`, JSON.stringify(object))
+        return true
     }
 
-    static getObjectFromStorage(prefix: string) {
+    static getObjectFromStorage: (prefix: string) => Promise<any> = async (prefix: string) => {
         const object = localStorage.getItem(`${localstorageKey}-${prefix}`)
-        return object && JSON.parse(object)
+        return await (object && JSON.parse(object))
     }
 
-    static clearStorage(prefix: string) {
-        localStorage.removeItem(`${localstorageKey}-${prefix}`)
+    static clearStorage: (prefix: string) => Promise<any> = async (prefix: string) => {
+        await localStorage.removeItem(`${localstorageKey}-${prefix}`)
+        return true
     }
 }
