@@ -1,6 +1,5 @@
 import React from 'react'
 import { call, fork, select, put } from "redux-saga/effects"
-import { replace } from 'connected-react-router'
 
 import { socketEmit, socketEmitAndWaitData } from '../../../code/socket/socket-emit'
 import { todo, infoMessage, errorMessage } from '../../../code/messages'
@@ -20,6 +19,7 @@ import { iShortRoom } from "../../webrtc-rooms/entity/rooms-entity"
 import { connectToRoom } from "../action-creaters/connect"
 import showModalRoomJoin from "../../../code/modals/room-join"
 import { reconnectGame } from '../../games-common/sagas/start-game'
+import Router from '../../../code/common/router'
 
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
 
@@ -91,7 +91,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
         LocalStorage.setObjectToStorage(roomToken, 'room-token')
 
-        replace('/room')
+        Router.replace('/room')
     }
     else {
 

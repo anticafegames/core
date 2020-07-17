@@ -3,7 +3,6 @@ import { vkAppId } from '../../config/vk-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
-import { replace } from 'connected-react-router'
 import { hash } from '../../code/hash'
 
 declare const VK: any

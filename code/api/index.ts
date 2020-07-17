@@ -1,7 +1,6 @@
 import axios from 'axios'
 import jsonp from 'jsonp'
 import { call, put, takeEvery, all, select } from 'redux-saga/effects'
-import { replace } from 'connected-react-router'
 import jwt from 'jwt-decode'
 
 

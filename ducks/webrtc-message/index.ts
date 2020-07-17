@@ -1,9 +1,8 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { delay, eventChannel } from 'redux-saga'
+import { eventChannel } from 'redux-saga'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
-import { replace } from 'connected-react-router'
 
 import { bindSocketEvents, getSagaKeyUnbindSocket } from '../../code/socket/bind-socket-events-helper'
 import { socketEmit } from '../../code/socket/socket-emit'
