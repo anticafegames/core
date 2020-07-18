@@ -1,6 +1,6 @@
 
-import { Channel, eventChannel, delay } from 'redux-saga'
-import { call, take, select, put, fork, race, all, spawn } from 'redux-saga/effects'
+import { Channel, eventChannel } from 'redux-saga'
+import { call, take, select, put, race, all, spawn, delay } from 'redux-saga/effects'
 
 import { iSocketAction, iSocketResult } from '../../ducks/socket/entity/interface'
 

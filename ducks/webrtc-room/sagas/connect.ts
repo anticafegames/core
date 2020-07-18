@@ -46,7 +46,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
         const { mode, params } = payload
 
         const query = yield select(querySelector)
-        params.isDebug = location.host === 'localhost:3000'
+        params.isDebug = !global && window.location.host === 'localhost:3000'
 
         const data = { mode, params }
         yield call(socketEmit, 'room_join', data, true)

@@ -3,9 +3,6 @@ import { vkAppId } from '../../config/vk-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take, race, fork, delay } from 'redux-saga/effects'
-import { hash, guid } from '../../code/hash'
-
-declare const VK: any
 
 import Store, { iMainEntity } from './entity/main-entity'
 import PreloaderEntity, { iPreloader, firstPreloaderParams } from './entity/preloader-entity'

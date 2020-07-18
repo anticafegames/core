@@ -1,14 +1,10 @@
 import axios from 'axios'
 import jsonp from 'jsonp'
 import { call, put, takeEvery, all, select } from 'redux-saga/effects'
-import jwt from 'jwt-decode'
 
 
-import { accessTokenSelector, waitAuthenticationSelector, LOG_IN_SUCCESS, AUTH_SUCCESS, AUTH_REQUEST } from '../../ducks/authentication'
 import { apiUrl as baseURL } from '../../config/app-config'
-import LocalStorage from '../local-storage'
 import { refreshAccessToken, authorizationHeader } from './auth'
-import { iResult } from '../common/interfaces'
 
 export default class Api {
 

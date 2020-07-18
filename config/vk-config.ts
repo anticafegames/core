@@ -10,7 +10,7 @@ export const vkApiVersion = '5.73'
 export const defaultPhoto = 'https://sun9-67.userapi.com/c851136/v851136209/1687e/niVWy1PCZ8k.jpg?ava=1'
 
 export const state = 'anticafe'
-export const vkAuthUrl = `https://oauth.vk.com/authorize?client_id=${vkAppId}&display=popup&redirect_uri=${location.protocol}//${location.host}/auth&scope=offline,photos&response_type=token&v=${vkApiVersion}&state=anticafe`
+export const vkAuthUrl = `https://oauth.vk.com/authorize?client_id=${vkAppId}&display=popup&redirect_uri=${!global && window.location.protocol}//${!global && window.location.host}/auth&scope=offline,photos&response_type=token&v=${vkApiVersion}&state=anticafe`
 export const vkAuthPopupParams = 'width=675px,height=430'
 
 export const regexVkHash = /^#access_token=.+&expires_in=\d+&user_id=\d+&state=anticafe$/
