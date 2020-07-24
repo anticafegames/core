@@ -70,7 +70,7 @@ export default function reducer(state = new MainEntity(), action: any) {
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName]
+export const stateSelector = (state: any) => state[moduleName] as MainEntity
 export const userSelector = createSelector(stateSelector, state => state.user)
 
 export const loadingSelector = createSelector(stateSelector, state => state.loading)

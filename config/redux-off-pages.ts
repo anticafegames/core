@@ -1,3 +1,5 @@
+declare var window: any
+
 const reduxOffPages = [
     '/auth'
 ]

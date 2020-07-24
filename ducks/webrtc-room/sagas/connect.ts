@@ -23,6 +23,8 @@ import Router from '../../../code/common/router'
 
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
 
+declare var window: any
+
 export function* roomConnectSocketRequestSaga({ payload }: any) {
 
     try {
@@ -46,7 +48,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
         const { mode, params } = payload
 
         const query = yield select(querySelector)
-        params.isDebug = !global && window.location.host === 'localhost:3000'
+        params.isDebug = !window.isNative && window.location.host === 'localhost:3000'
 
         const data = { mode, params }
         yield call(socketEmit, 'room_join', data, true)
@@ -112,7 +114,7 @@ export function* knockOnRoomEmitSaga({ payload }: any) {
     const auth = yield call(logInSaga)
 
     if (!auth) {
-        alert('Ошибка при авторизации')
+        messageToast('Ошибка при авторизации')
         return
     }
 

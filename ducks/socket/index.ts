@@ -75,8 +75,6 @@ export const socketEventsSelector = createSelector(stateSelector, state => state
 */
 
 export function* socketConnect() {
-
-    const y = yield call(Api.GET, 'hello', null)
     
     const socket = io.connect(socketUrl, { secure: false })
 
