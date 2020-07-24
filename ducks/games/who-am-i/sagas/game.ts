@@ -4,7 +4,7 @@ import { IAmOwnerSelector } from '../../../webrtc-room'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import { socketPrefix, START_GAME_SUCCESS, SHOW_MY_NAME_SUCCESS, SHOW_NAME_SUCCESS } from '../constants'
 import { closeElement } from '../../../modal'
-import { messageToast } from '../../../../code/alerts/toast'
+import Toasts from '../../../../code/alerts/toast'
 
 export function* startGameEmitSaga() {
 
@@ -20,7 +20,7 @@ export function* startGameSocketSaga({ payload }: any) {
     const { error } = payload
     
     if(error) {
-        return messageToast(error)
+        return Toasts.messageToast(error)
     }
 
     yield put({ type: START_GAME_SUCCESS })

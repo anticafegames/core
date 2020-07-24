@@ -5,7 +5,7 @@ import createOffer from './create-offer'
 import { roomSelector } from '../../webrtc-room'
 import { select, call, fork, race, take } from 'redux-saga/effects'
 import { iRoomPeer } from '../../webrtc-room/entity/room-peer-entity'
-import { messageToast } from '../../../code/alerts/toast'
+import Toasts from '../../../code/alerts/toast'
 import { getSocketResult, webrtcSocketEmit } from '../../../code/webrtc'
 import { infoMessage } from '../../../code/messages'
 import { iRoom } from '../../webrtc-room/entity/room-entity'
@@ -45,7 +45,7 @@ export function* reconnectConnectionSender(userId: string) {
     infoMessage(`Неудалось установить соединение с игроком userID: ${userId}. Переподключаемся`, 'Sender')
 
     if (user) {
-        messageToast(`Неудалось установить соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
+        Toasts.messageToast(`Неудалось установить соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
     }
 
     yield call(leavePeerSaga, { payload: { userId } })
@@ -71,7 +71,7 @@ export function* reconnectConnectionRecever(userId: string, mode: reconnectMode)
     const user = users && users.find(user => user.id === userId)
 
     if (user) {
-        messageToast(`${mode == 'connecting' ? 'Неудалось установить' : 'Потеряно' } соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
+        Toasts.messageToast(`${mode == 'connecting' ? 'Неудалось установить' : 'Потеряно' } соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
     }
 
     yield call(leavePeerSaga, { payload: { userId } })
@@ -118,7 +118,7 @@ export function* _listenChangeState(channel: any, userId: string, connection: RT
             infoMessage(`Потеряно соединение с игроком: userID: ${userId}. Переподключаемся`)
 
             if(user) {
-                messageToast(`Потеряно соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
+                Toasts.messageToast(`Потеряно соединение с игроком: ${user.first_name} ${user.last_name}. Пробуем переподключиться.`)
             }
 
             const data = getSocketResult('reconnect', userId, { mode: 'stateChange' })

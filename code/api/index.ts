@@ -35,14 +35,14 @@ export default class Api {
     }
 
     static RequestSaga = function* (params: any): Generator<any, any, any> {
-        debugger
+        
         const { url, method, data } = params
         const config = yield Api.GetHeader({ url, method })
 
         try {
 
             const request = { method, baseURL, url, data, ...config }
-            debugger
+            
             const { data: result } = yield call(axios, request)
 
             if (result.error && result.error.message === 'maxAge exceeded') {
@@ -53,14 +53,13 @@ export default class Api {
             }
 
         }
-        catch (error) {debugger
+        catch (error) {
             return { error }
         }
     }
 
     static GetHeader = function* (params: any) {
-        debugger
-        console.log('cinf')
+        
         let config = {}
 
         //const { options } = this.params
@@ -72,7 +71,7 @@ export default class Api {
         /*if(options && options.contentType) {
             config.headers.contentType = options.contentType
         }*/
-        debugger
+        
         return config
     }
 

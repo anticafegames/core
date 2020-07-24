@@ -77,7 +77,7 @@ export const socketEventsSelector = createSelector(stateSelector, state => state
 export function* socketConnect() {
     
     const socket = io.connect(socketUrl, { secure: false })
-
+    
     yield put({
         type: SOCKET_CONNECT_SUCCESS,
         payload: { socket }

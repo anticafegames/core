@@ -13,7 +13,7 @@ import createLocalStreamSaga, { waitLocalStream, } from '../../webrtc/sagas/loca
 import { querySelector, hashSelector } from '../../router'
 import { showGlobalPreloader, getHidePreloaderSagaKey, hidePreloader } from '../../global-preloader'
 import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector } from ".."
-import { messageToast } from "../../../code/alerts/toast"
+import Toasts from "../../../code/alerts/toast"
 import { iSocketAction } from "../../socket/entity/interface"
 import { iShortRoom } from "../../webrtc-rooms/entity/rooms-entity"
 import { connectToRoom } from "../action-creaters/connect"
@@ -34,14 +34,14 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
         const auth = yield call(logInSaga)
 
         if (!auth) {
-            messageToast('Ошибка при авторизации')
+            Toasts.messageToast('Ошибка при авторизации')
             throw new Error()
         }
 
         const localStream = yield call(createLocalStreamSaga)
 
         if (!localStream) {
-            messageToast('Ошибка при подключении к камере')
+            Toasts.messageToast('Ошибка при подключении к камере')
             throw new Error()
         }
 
@@ -71,7 +71,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
             const localStream = yield call(createLocalStreamSaga)
 
             if (!localStream) {
-                messageToast('Ошибка при подключении к камере')
+                Toasts.messageToast('Ошибка при подключении к камере')
                 yield leaveFromRoomSaga()
             }
         }
@@ -98,7 +98,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
     else {
 
         if (mode === 'connect') {
-            messageToast(error)
+            Toasts.messageToast(error)
         }
 
         yield put({ type: CLOSE_LOCAL_STREAM_REQUEST })
@@ -114,14 +114,14 @@ export function* knockOnRoomEmitSaga({ payload }: any) {
     const auth = yield call(logInSaga)
 
     if (!auth) {
-        messageToast('Ошибка при авторизации')
+        Toasts.messageToast('Ошибка при авторизации')
         return
     }
 
     const data = { roomId }
     yield call(socketEmit, 'room_knock_on_room', data, true)
 
-    messageToast('Отправлен запрос на присоединение к комнате')
+    Toasts.messageToast('Отправлен запрос на присоединение к комнате')
 }
 
 export function* roomJoinSocketEventSaga({ payload }: any) {
@@ -207,7 +207,7 @@ export function* checkReconnectRoom() {
     yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0, true)
 
     const error = function* (message: string) {
-        messageToast(message)
+        Toasts.messageToast(message)
         return yield call(hidePreloader, 'connet_room')
     }
 

@@ -1,21 +1,8 @@
 import { appName } from '../../config/app-config'
-import { vkAppId } from '../../config/vk-config'
 import { createSelector } from 'reselect'
-import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
-import { replace } from 'connected-react-router'
-import jwt from 'jwt-decode'
-import { hash } from '../../code/hash'
-
-import Api from '../../code/api'
-import { refreshAccessToken } from '../../code/api/auth'
-import LocalStorage from '../../code/local-storage'
-import { errorMessage } from '../../code/messages'
-import { waitCallback } from '../../code/ducks/saga-helper'
 import VKApi from '../../code/api/vk-api/vk-api'
 import { waitAuthenticationSelector, AUTH_SUCCESS, vkUserIdSelector, LOG_OUT_SUCCESS, USERID_SOCKET_EVENT } from '../authentication'
-import { iSession } from '../authentication/entity/auth-session-entity'
-import { LOAD_ROOMS_REQUEST } from '../webrtc-rooms'
 import MainEntity from './entity/main-entity'
 
 /*

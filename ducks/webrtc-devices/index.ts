@@ -11,7 +11,7 @@ import { ROOM_CONNECT_REQUEST } from '../webrtc-room'
 import { localStreamSelector, UPDATE_PROPS, peersSelector } from '../webrtc'
 import { iPeersConnection } from '../webrtc/entity/peer-connection-entity'
 import MainEntity from './entity/main-entity'
-import { messageToast } from '../../code/alerts/toast'
+import Toasts from '../../code/alerts/toast'
 import LocalStorage from '../../code/local-storage'
 import { iDeviceSettings } from './entity/interface'
 import { streamConstraints } from '../../code/webrtc/local-stream'
@@ -197,7 +197,7 @@ export function* loadSettingsSaga() {
     }
     catch (error) {
         errorMessage(error)
-        messageToast('Неудалось получить доступ к устройствам')
+        Toasts.messageToast('Неудалось получить доступ к устройствам')
     }
 }
 

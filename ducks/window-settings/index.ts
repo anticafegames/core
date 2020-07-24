@@ -1,7 +1,7 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { delay, eventChannel, takeLatest } from 'redux-saga'
+//import { delay, eventChannel, takeLatest } from 'redux-saga'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
 
 import { bindSocketEvents, getSagaKeyUnbindSocket } from '../../code/socket/bind-socket-events-helper'
@@ -68,7 +68,7 @@ export const stateSelector = (state: any) => state[moduleName]
 
 export function* bindResizeEventSaga() {
 
-    const rootDiv = document.getElementById('root')
+    /*const rootDiv = document.getElementById('root')
 
     const width = rootDiv!.offsetWidth
     const height = rootDiv!.offsetHeight
@@ -76,7 +76,7 @@ export function* bindResizeEventSaga() {
     yield put({
         type: SET_SIZE,
         payload: { width, height }
-    })
+    })*/
 
     //yield fork(listenResizeWindow, rootDiv!)
 }
@@ -84,8 +84,8 @@ export function* bindResizeEventSaga() {
 export function* listenResizeWindow(rootDiv: HTMLElement) {
     
     yield call(listenEvent, (emit: any) => {
-        debugger
-        rootDiv.addEventListener('resize', (event: any) => { debugger; emit(event); });
+        
+        //rootDiv.addEventListener('resize', (event: any) => { emit(event); });
         return () => { }
     }, RESIZE_WINDOW_REQUEST, '')
 }

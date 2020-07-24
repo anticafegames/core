@@ -6,7 +6,7 @@ import { convertResponceGameUser } from '../entity/converter'
 import { CHANGE_ROOM_STATUS } from '../../../webrtc-room'
 import showBoard from '../../../../code/games/who-am-i/show-modal-select-name'
 import { socketEmit } from '../../../../code/socket/socket-emit'
-import { messageToast } from '../../../../code/alerts/toast'
+import Toasts from '../../../../code/alerts/toast'
 
 export function* prepareStartSaga({ payload }: any) {
 
@@ -30,7 +30,7 @@ export function* selectNameEmitSaga({ payload }: any) {
     const { name } = payload
 
     if(!name.trim()) {
-        return messageToast('Имя не должно быть пустым');
+        return Toasts.messageToast('Имя не должно быть пустым');
     }
 
     yield put({ type: SELECT_NAME_LOADING, payload: { loading: true } })
@@ -42,7 +42,7 @@ export function* selectNameSocketEventSaga({ payload }: any) {
     const { error, userId, name, nameFilled } = payload
 
     if(error) {
-        return messageToast(error);
+        return Toasts.messageToast(error);
     }
 
     if(nameFilled) {

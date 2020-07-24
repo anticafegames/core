@@ -65,7 +65,7 @@ export default function reducer(state = new MainEntity(), action: any) {
         case AUTH_SUCCESS:
             return state.setWaitAuthentication(false)
 
-        case USERID_SOCKET_EVENT:
+        case USERID_SOCKET_EVENT:debugger
             return state.setUserId(payload.userId)
 
         default:
