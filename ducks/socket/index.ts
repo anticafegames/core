@@ -76,7 +76,7 @@ export const socketEventsSelector = createSelector(stateSelector, state => state
 
 export function* socketConnect() {
     
-    const socket = io.connect(socketUrl, { secure: false })
+    const socket = io.connect(socketUrl, { secure: false, transports: ['websocket'] })
     
     yield put({
         type: SOCKET_CONNECT_SUCCESS,
