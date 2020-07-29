@@ -65,7 +65,7 @@ export default function reducer(state = new MainEntity(), action: any) {
         case AUTH_SUCCESS:
             return state.setWaitAuthentication(false)
 
-        case USERID_SOCKET_EVENT:debugger
+        case USERID_SOCKET_EVENT:
             return state.setUserId(payload.userId)
 
         default:
@@ -132,10 +132,7 @@ export function* logInSaga() {
 }
 
 export function* logOutSaga() {
-
-    LocalStorage.clearStorage('anticafeToken')
-    LocalStorage.clearStorage('toomToken')
-
+    yield call(Auth.logout)
     yield put({ type: LOG_OUT_SUCCESS })
 }
 

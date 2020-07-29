@@ -26,7 +26,7 @@ export default class Api {
     static JSONP = function* (url: string, params: any, options?: any) {
 
         url = Api.setPatamsToUrl(url, params)
-
+        
         return yield new Promise((resolve) => {
             jsonp(url, options, (error, result) => {
                resolve({ error: error || result.error, result })
@@ -36,15 +36,16 @@ export default class Api {
 
     static RequestSaga = function* (params: any): Generator<any, any, any> {
         
-        const { url, method, data } = params
-        const config = yield Api.GetHeader({ url, method })
+        const { url, method, data, options } = params
+
+        const config = yield call(Api.GetConfig, { url, method, options })
 
         try {
-
+            
             const request = { method, baseURL, url, data, ...config }
             
-            const { data: result } = yield call(axios, request)
-
+            const { data: result } = yield axios(request)
+            
             if (result.error && result.error.message === 'maxAge exceeded') {
                 return yield call(refreshAccessToken, params)
 
@@ -58,24 +59,34 @@ export default class Api {
         }
     }
 
+    static GetConfig = function* (params: any) {
+
+        let config = yield call(Api.GetHeader, params)
+
+        const { options } = params
+
+        if(options) {
+
+            if(options.baseURL) {
+                config.baseURL = options.baseURL
+            }
+        }
+
+        return config
+    }
+
     static GetHeader = function* (params: any) {
         
         let config = {}
 
-        //const { options } = this.params
-
         if (/api\/protected\//i.test(params.url)) {
             yield call(authorizationHeader, config)
         }
-
-        /*if(options && options.contentType) {
-            config.headers.contentType = options.contentType
-        }*/
         
         return config
     }
 
-    private static setPatamsToUrl(url: string, params: any) {
+    static setPatamsToUrl(url: string, params: any) {
 
         const keys = Object.keys(params)
 

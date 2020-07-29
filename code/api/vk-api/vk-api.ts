@@ -11,24 +11,10 @@ import { accessTokenSelector, userIdSelector } from '../../../ducks/authenticati
 import Api from '..'
 import { iResult } from '../../common/interfaces'
 
-declare const VK: any
-
 //https://vk.com/dev/photo_sizes
 type sizeType = 'photo_75' | 'photo_130' | 'photo_604' | 'photo_807' | 'photo_1280'
 
 export default class VKApi {
-
-    static login = function* () {
-        return yield call(waitCallback, (emit: any) => VK.Auth.login((response: iAuthVkResponse) => emit(response) , 5))
-    }
-
-    static logout = function* () {
-        return yield call(waitCallback, (emit: any) => VK.Auth.logout((response: iAuthVkResponse) => emit(response)))
-    }
-
-    static getLoginStatus = function* () {
-        return yield call(waitCallback, (emit: any) => VK.Auth.getLoginStatus((response: iAuthVkResponse) => emit(response)))
-    }
 
     static getUser = function* (userId: number) {
 
@@ -75,8 +61,8 @@ export default class VKApi {
                 return new AuthUserEntity(user)
             }
         } 
-        catch {
-            errorMessage(`Не удалось загрузить пользователя ${userId}`)
+        catch(error) {
+            errorMessage(`Не удалось загрузить пользователя ${userId}`, error)
         }
 
         return null

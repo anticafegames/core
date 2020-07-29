@@ -5,4 +5,5 @@ export type loginMode = 'check' | 'login'
 export default class Auth {
     static login: (loginMode: loginMode) => any
     static waitAuthentication: (waitLogIn: boolean, waitLoadUser: boolean) => any
+    static logout: () => any
 }
