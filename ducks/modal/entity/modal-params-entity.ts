@@ -3,6 +3,7 @@ import React from 'react'
 
 export interface iModalParams {
     className?: string
+    styles?: any
     canCloseOnOverlay?: boolean
     withFooter?: boolean
 }
