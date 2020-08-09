@@ -1,4 +1,5 @@
-import { delay, eventChannel } from 'redux-saga'
+import { eventChannel } from 'redux-saga'
+import { delay } from 'redux-saga/effects'
 
 import { leavePeerSaga } from './sagas-request'
 import createOffer from './create-offer'

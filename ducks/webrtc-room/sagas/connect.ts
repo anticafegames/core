@@ -17,7 +17,7 @@ import Toasts from "../../../code/alerts/toast"
 import { iSocketAction } from "../../socket/entity/interface"
 import { iShortRoom } from "../../webrtc-rooms/entity/rooms-entity"
 import { connectToRoom } from "../action-creaters/connect"
-import showModalRoomJoin from "../../../code/modals/room-join"
+import Modals from "../../../../core/code/modals"
 import { reconnectGame } from '../../games-common/sagas/start-game'
 import Router from '../../../code/common/router'
 
@@ -243,7 +243,7 @@ export function* roomConnectByLink(hash: string) {
     if (room!.openRoom) {
         yield put(connectToRoom({ roomId: room.id }))
     } else {
-        yield put(showModalRoomJoin(room))
+        yield put(Modals.showRoomJoinFormPageModal(room))
     }
 
     yield call(hidePreloader, 'connectRoomByLink')

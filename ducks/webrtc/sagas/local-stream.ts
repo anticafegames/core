@@ -1,10 +1,9 @@
-import { put, call, select, take, race } from "redux-saga/effects"
+import { put, call, select, take, race, delay } from "redux-saga/effects"
 
 import { CREATE_LOCAL_STREAM_SUCCESS, localStreamSelector, CLOSE_LOCAL_STREAM_SUCCESS } from ".."
 
 import { iResultRequest } from "../../../interfaces"
 import { infoMessage, errorMessage } from "../../../code/messages"
-import { delay } from "redux-saga"
 import { errorSagaKey, waitSuccess } from "../../../code/ducks/saga-helper"
 import { streamConstraints } from '../../../code/webrtc/local-stream'
 

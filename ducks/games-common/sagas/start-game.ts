@@ -4,7 +4,7 @@ import { gameKey, iReconnectGameState } from '../entity/interface'
 import { WAIT_READY_START, USER_IS_READY, WAIT_READY_STOP, gameKeySelector, STOP_GAME_SUCCESS, RECONNECT_GAME } from '..'
 import { iRoomPeer } from '../../webrtc-room/entity/room-peer-entity'
 import { roomUsersSelector, CHANGE_ROOM_STATUS } from '../../webrtc-room'
-import showCheckReadyModal from '../../../code/modals/check-ready'
+import Modals from '../../../../core/code/modals'
 import { socketEmit } from '../../../code/socket/socket-emit'
 import { infoMessage } from '../../../code/messages'
 import { userSelector } from '../../user'
@@ -51,7 +51,7 @@ export function* checkReadyStart(gameKey: gameKey) {
         payload: { status: 'check-ready' }
     })
 
-    yield put(showCheckReadyModal())
+    yield put(Modals.showCheckReadyModal())
     yield call(socketEmit, 'game-common/ready-start', { gameKey, readyUsers })
 }
 
@@ -80,7 +80,7 @@ export function* readyStartSaga({ payload }: any) {
         payload: { status: 'check-ready' }
     })
 
-    yield put(showCheckReadyModal())
+    yield put(Modals.showCheckReadyModal())
 }
 
 export function* iReadySaga() {

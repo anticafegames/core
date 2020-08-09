@@ -1,12 +1,10 @@
-import { call, put, select, fork, take, race } from 'redux-saga/effects'
+import { call, put, select, fork, take, race, delay as delaySaga} from 'redux-saga/effects'
 
 import { getSocketType } from '.'
 import { SOCKET_EMIT } from '../../ducks/socket'
 import { anticafeTokenSelector } from '../../ducks/authentication'
 import { iSocketAction } from '../../ducks/socket/entity/interface'
 import { bindSocketEvents, waitBindSocket, getSagaKeyUnbindSocket } from './bind-socket-events-helper'
-import { delay as delaySaga } from 'redux-saga'
-
 
 export function* socketEmit(event: string, data: any, isProtectedEvent: boolean = false) {
 
