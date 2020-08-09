@@ -5,7 +5,7 @@ import { socketEmit } from "../../../code/socket/socket-emit"
 import RoomPeerEntity from "../entity/room-peer-entity"
 import VKApi from "../../../code/api/vk-api/vk-api"
 
-import canJoinRoomToast from '../../../../code/alerts/can-join-room'
+import CustomDialogs from '../../../../core/code/alerts/custom-dialogs'
 
 export function* changeOwnerIdSaga({ payload }: any) {
 
@@ -37,7 +37,7 @@ export function* canJoinRoomSaga({ payload }: any) {
 
     if(!user) return
 
-    canJoinRoomToast(user, knockToken)
+    CustomDialogs.showCanJoidRoomDialog(user, knockToken)
 } 
 
 export function* canJoinRoomSuccessSaga({ payload }: any) {
