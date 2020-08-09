@@ -5,7 +5,7 @@ import { socketEmit } from "../../../code/socket/socket-emit"
 import RoomPeerEntity from "../entity/room-peer-entity"
 import VKApi from "../../../code/api/vk-api/vk-api"
 
-import canJoinRoomToast from '../../../code/alerts/can-join-room'
+import canJoinRoomToast from '../../../../code/alerts/can-join-room'
 
 export function* changeOwnerIdSaga({ payload }: any) {
 
