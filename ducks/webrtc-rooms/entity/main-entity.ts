@@ -30,7 +30,7 @@ export default class MainEntity extends Record(defaultParams) {
     deleteRooms(ids: string[]) {
 
         let rooms = this.getRooms()
-
+        debugger
         while(ids.length) {
 
             const roomId = ids.pop()
@@ -40,7 +40,7 @@ export default class MainEntity extends Record(defaultParams) {
                 rooms = rooms.deleteIn([index])
             }
         }
-
+        debugger
         return this.set('rooms', rooms) as this
     }
 

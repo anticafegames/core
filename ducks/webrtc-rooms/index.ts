@@ -1,7 +1,6 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { delay, eventChannel } from 'redux-saga'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
 
 import { bindSocketEvents, getSagaKeyUnbindSocket } from '../../code/socket/bind-socket-events-helper'
@@ -147,9 +146,9 @@ export function* addRooms(newRooms: iShortRoomResponse[], oldRooms: iShortRoom[]
     const roomsResponse = newRooms.filter(room => !oldRooms.some(item => item.id === room.id))
 
     if(!roomsResponse.length) return
-
+    
     const owners: RoomPeerEntity[] = yield call(VKApi.loadRoomPeers, roomsResponse.filter(room => room.owner).map(room => room.owner!))
-
+    
     const rooms = roomsResponse.map(room => ({
         ...room, owner: owners.find(owner => room.owner && (owner.id === room.owner!.id))!
     }))
