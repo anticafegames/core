@@ -4,7 +4,7 @@ import { PREPARE_GAME_START_SUCCESS, socketPrefix, SELECT_NAME_LOADING, SELECT_M
 import { iGameUserResponce, iGameUser } from '../entity/game-user-entity'
 import { convertResponceGameUser } from '../entity/converter'
 import { CHANGE_ROOM_STATUS } from '../../../webrtc-room'
-import showBoard from '../../../../code/games/who-am-i/show-modal-select-name'
+import WhoAmIModals from '../../../../../core/code/games/who-am-i/modals'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import Toasts from '../../../../code/alerts/toast'
 
@@ -23,7 +23,7 @@ export function* prepareStartSaga({ payload }: any) {
         payload: { gameUsers }
     })
 
-    yield put(showBoard())
+    yield put(WhoAmIModals.showSelectNameModal())
 }
 
 export function* selectNameEmitSaga({ payload }: any) {

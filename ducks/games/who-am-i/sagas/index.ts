@@ -4,7 +4,7 @@ import { iReconnectGameState } from '../../../games-common/entity/interface'
 import { iReconnectState, iReconnectStateResponce, iGameState } from '../entity/interface'
 import { iGameUser } from '../entity/game-user-entity'
 import { convertResponceGameUser, convertReconnectStateResponce } from '../entity/converter'
-import showBoard from '../../../../code/games/who-am-i/show-modal-select-name'
+import WhoAmIModals from '../../../../../core/code/games/who-am-i/modals'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import { closeElement } from '../../../modal/index'
 import { bindSocketEvents } from './bind-socket-events'
@@ -36,7 +36,7 @@ export function* reconnectGame(reconnectState: iReconnectGameState) {
     })
     
     if(state.gameState === 'prepare') {
-        yield put(showBoard())
+        yield put(WhoAmIModals.showSelectNameModal())
     }
 
     return 
