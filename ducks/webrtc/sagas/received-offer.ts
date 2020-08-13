@@ -48,12 +48,12 @@ export default function* receivedOfferSaga (desc: any, userId: string) {
     infoMessage(`Создан answer. userId: ${userId}`)
 }
 
-function createAnswer(connection: RTCPeerConnection): Promise<iResult<RTCSessionDescriptionInit>> {
+function createAnswer(connection: RTCPeerConnection): Promise<iResult<any>> {
 
-    const promise = new Promise<iResult<RTCSessionDescriptionInit>>(async (resolve) => {
+    const promise = new Promise<iResult<any>>(async (resolve) => {
 
         try {
-            const desc = await connection.createAnswer(answerOptions)
+            const desc = await connection.createAnswer()
             resolve(getResult('', desc))
         }
         catch {

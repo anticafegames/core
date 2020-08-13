@@ -3,18 +3,14 @@ import { select, put, take, call, fork, race } from "redux-saga/effects"
 
 import { localStreamSelector, CREATE_LOCAL_STREAM_SUCCESS, ADD_TRACK_REQUEST, peersSelector } from ".."
 
-import { todo, infoMessage } from "../../../code/messages"
+import { todo, infoMessage, errorMessage } from "../../../code/messages"
 import { iPeersConnection } from "../entity/peer-connection-entity"
 import { appName } from "../../../config/app-config"
+import Track from '../../../code/webrtc/track'
 
 
 export function* listenOnTrack(connection: RTCPeerConnection, userId: string) {
-
-    const channel = yield eventChannel((emit: any) => {
-        connection.ontrack = (event: any) => emit(event)
-        return () => { connection.ontrack = null }
-    })
-
+    const channel = yield eventChannel((emit: any) => Track.listenOnTrack(connection, emit))
     yield fork(listen, channel, userId)
 }
 
@@ -22,27 +18,23 @@ export function* listen(channel: any, userId: string) {
 
     while (true) {
 
-        const { channelEvent, channelClose } = yield race({
-            channelEvent: take(channel),
+        const { stream, channelClose } = yield race({
+            stream: take(channel),
             channelClose: take(closeListenSagaKey(userId))
-        }) 
-        
-        if(!channelEvent) {
+        })
+
+        if (!stream) {
             infoMessage(`Закрыли канал OnTrack userId: ${userId}`)
             return yield call(channel.close)
-        } 
+        }
 
-        const event = channelEvent
-
-        yield call(ontrack, event, userId)
+        yield call(ontrack, stream, userId)
     }
 }
 
-export function* ontrack(event: any, userId: string) {
+export function* ontrack(track: MediaStream, userId: string) {
 
     infoMessage(`Добавлен трек userId: ${userId}`)
-
-    const track = event.streams[0] as MediaStream || null
 
     if (!track) return
 
@@ -61,7 +53,7 @@ export function* addTrack(connection: RTCPeerConnection) {
         localStream = payload.stream as MediaStream
     }
 
-    localStream.getTracks().forEach((track: MediaStreamTrack) => connection.addTrack(track, localStream))
+    Track.addTrack(connection, localStream)
 }
 
 export function* changeTracks(stream: MediaStream) {
@@ -79,19 +71,19 @@ export function* changeTracks(stream: MediaStream) {
 
         oldAudioTrack.stop()
         localStream.removeTrack(oldAudioTrack)
-        
+
         localStream.addTrack(newAudioTrack)
 
         peers.forEach(peer => {
-
-            const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldAudioTrack.id)
+            errorMessage('changeTracks Нужно сделать DI')
+            /*const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldAudioTrack.id)
             
             if(sender) {
                 sender.replaceTrack(newAudioTrack)
-            }
+            }*/
         })
     }
-    
+
     if (newVideoTrack && (!oldVideoTrack || oldVideoTrack.id !== newVideoTrack.id)) {
 
         oldVideoTrack.stop()
@@ -100,12 +92,12 @@ export function* changeTracks(stream: MediaStream) {
         localStream.addTrack(newVideoTrack)
 
         peers.forEach(peer => {
-
-            const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldVideoTrack.id)
+            errorMessage('changeTracks Нужно сделать DI')
+            /*const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldVideoTrack.id)
             
             if(sender) {
                 sender.replaceTrack(newVideoTrack)
-            }
+            }*/
         })
     }
 }

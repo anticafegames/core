@@ -5,20 +5,20 @@ import { CREATE_LOCAL_STREAM_SUCCESS, localStreamSelector, CLOSE_LOCAL_STREAM_SU
 import { iResultRequest } from "../../../interfaces"
 import { infoMessage, errorMessage } from "../../../code/messages"
 import { errorSagaKey, waitSuccess } from "../../../code/ducks/saga-helper"
-import { streamConstraints } from '../../../code/webrtc/local-stream'
+import LocalStream from '../../../code/webrtc/local-stream'
 
 
 const createLocalStream = async () => {
 
-    const constraints = await streamConstraints()
-
     const promise = new Promise(async (resolve, reject) => {
 
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia(constraints)
+        try {            
+
+            const stream = await LocalStream.createLocalStream()
             resolve({ result: { stream } })
         }
-        catch {
+        catch (error) {
+            errorMessage(error)
             resolve({error: 'Ошибка getUserMedia'})
         } 
     })

@@ -1,6 +1,5 @@
 import LocalStorage from '../local-storage'
 import { iDeviceSettings } from '../../ducks/webrtc-devices/entity/interface'
-import { call } from 'redux-saga/effects'
 
 export const streamConstraints = async (): Promise<MediaStreamConstraints> => {
 
@@ -15,3 +14,11 @@ export const streamConstraints = async (): Promise<MediaStreamConstraints> => {
         }
     }
 }
+
+class LocalStream {
+
+    static createLocalStream: () => Promise<boolean | MediaStream>
+
+}
+
+export default LocalStream

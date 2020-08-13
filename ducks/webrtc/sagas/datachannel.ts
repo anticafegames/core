@@ -1,7 +1,7 @@
 import { eventChannel } from "redux-saga"
 import { select, put, take, call, fork } from "redux-saga/effects"
 
-import { todo, infoMessage } from "../../../code/messages"
+import { todo, infoMessage, errorMessage } from "../../../code/messages"
 import { getSocketResult, webrtcSocketEmit } from "../../../code/webrtc"
 import { addChannelSaga } from "./sagas-request"
 
@@ -10,8 +10,9 @@ export function* listenOnDataChannel(connection: RTCPeerConnection, userId: stri
     todo('Закрыть канал, когда нашли', 'listenOnIceCandidate')
 
     const channel = yield eventChannel((emit: any) => {
-        connection.ondatachannel = (event: any) => emit(event)
-        return () => { connection.ondatachannel = null }
+        errorMessage('На нативе нету ondatachannel')
+        /*connection.ondatachannel = (event: any) => emit(event)*/
+        return () => { }
     })
 
     yield fork(listen, channel, userId)
@@ -26,8 +27,8 @@ export function* listen(channel: any, userId: string) {
     }
 }
 
-export function* ondatachannel({ channel }: RTCDataChannelEvent, userId: string) {
-
+export function* ondatachannel({ channel }: any, userId: string) {
+    errorMessage('На нативе нету ondatachannel')
     if (channel) {
 
         infoMessage(`ondatachannel userId: ${userId}`)

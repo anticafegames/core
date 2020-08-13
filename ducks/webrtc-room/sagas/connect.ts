@@ -30,14 +30,14 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
     try {
 
         yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0)
-
+        
         const auth = yield call(logInSaga)
 
         if (!auth) {
             Toasts.messageToast('Ошибка при авторизации')
             throw new Error()
         }
-
+        
         const localStream = yield call(createLocalStreamSaga)
 
         if (!localStream) {
@@ -47,7 +47,6 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
 
         const { mode, params } = payload
 
-        const query = yield select(querySelector)
         params.isDebug = !window.isNative && window.location.host === 'localhost:3000'
 
         const data = { mode, params }
@@ -192,8 +191,8 @@ export function* kickFromRoomSaga() {
 }
 
 export function* checkReconnectRoom() {
-
-    const hash: string = yield select(hashSelector)
+    
+    const hash: string = ''//yield select(hashSelector)
     
     if (/^#roomid=.+/.test(hash)) {
         yield roomConnectByLink(hash)
