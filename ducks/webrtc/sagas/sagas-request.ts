@@ -6,7 +6,6 @@ import { iPeersConnection } from "../entity/peer-connection-entity"
 import { closeListenSagaKey as closeListenOnIceCandidateSagaKey } from './onicecandidate'
 import { closeListenSagaKey as closeListenTrackSagaKey } from './track'
 import { closeListenSagaKey as closeListenStateChangeSagaKey } from './reconnect'
-import { type } from "os"
 
 export function* addConnectionSaga({ payload }: any) {
 
@@ -58,6 +57,7 @@ export function* leavePeerSaga({ payload }: any) {
         peer.channel && peer.channel.close()
         peer.track && peer.track.getTracks().forEach(track => track.stop())
         peer.connection && peer.connection.close()
+        
         yield call(closeWebRTCListeners, userId)
     }
 

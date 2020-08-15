@@ -48,7 +48,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
         const { mode, params } = payload
 
         params.isDebug = !window.isNative && window.location.host === 'localhost:3000'
-
+        
         const data = { mode, params }
         yield call(socketEmit, 'room_join', data, true)
 
@@ -60,7 +60,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
 export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
     let { error, result, mode } = payload
-
+    debugger
     if (!error) {
         
         const { room, roomToken, game } = result
@@ -92,7 +92,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
         LocalStorage.setObjectToStorage(roomToken, 'room-token')
 
-        Router.replace('/room')
+        Router.replace(isNative ? 'RoomScreen' : '/room')
     }
     else {
 
@@ -191,7 +191,7 @@ export function* kickFromRoomSaga() {
 }
 
 export function* checkReconnectRoom() {
-    
+    return
     const hash: string = ''//yield select(hashSelector)
     
     if (/^#roomid=.+/.test(hash)) {

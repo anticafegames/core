@@ -1,7 +1,6 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { delay, eventChannel } from 'redux-saga'
 import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
 
 import { bindSocketEvents } from '../../code/socket/bind-socket-events-helper'
