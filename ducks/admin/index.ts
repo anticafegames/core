@@ -4,7 +4,7 @@ import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
 import jwt from 'jwt-decode'
-import { hash } from '../../code/hash'
+import { hash } from '../../code/common/hash'
 
 import Api from '../../code/api'
 import { refreshAccessToken } from '../../code/api/auth'
