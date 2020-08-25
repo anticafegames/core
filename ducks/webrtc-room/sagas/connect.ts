@@ -22,15 +22,13 @@ import { reconnectGame } from '../../games-common/sagas/start-game'
 import Router from '../../../code/common/router'
 
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
-import Toast from '../../../code/alerts/toast'
 
 declare var window: any
 
 export function* roomConnectSocketRequestSaga({ payload }: any) {
 
     try {
-        
-        Toast.messageToast('rrrrrrrrrr')
+
         yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0)
         
         const auth = yield call(logInSaga)
@@ -62,7 +60,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
 export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
     let { error, result, mode } = payload
-    debugger
+    
     if (!error) {
         
         const { room, roomToken, game } = result
@@ -193,7 +191,7 @@ export function* kickFromRoomSaga() {
 }
 
 export function* checkReconnectRoom() {
-    
+
     const hash: string = ''//yield select(hashSelector)
     
     if (/^#roomid=.+/.test(hash)) {

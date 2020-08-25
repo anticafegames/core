@@ -1,25 +1,12 @@
 import { appName } from '../../config/app-config'
-import { vkAppId } from '../../config/vk-config'
 import { createSelector } from 'reselect'
-import { Record, OrderedMap, List } from 'immutable'
-import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
-import { hash } from '../../code/common/hash'
-
-declare const VK: any
+import { call, put, takeEvery, all, select } from 'redux-saga/effects'
 
 import MainEntity, { iAuthentication } from './entity/main-entity'
-import Api from '../../code/api'
-import { refreshAccessToken } from '../../code/api/auth'
-import LocalStorage from '../../code/local-storage'
-import { errorMessage } from '../../code/messages'
 import Auth from '../../code/api/vk-api/vk-api-helper'
-import { iAuthVkResponse } from './entity/interface'
-import { iSession } from './entity/auth-session-entity'
-import VKApi from '../../code/api/vk-api/vk-api'
-import { loadUserSaga, userSelector } from '../user'
 import { bindSocketEvents } from '../../code/socket/bind-socket-events-helper'
 import { iSocketAction } from '../socket/entity/interface'
-import { showGlobalPreloader, hidePreloader } from '../global-preloader'
+import { hidePreloader } from '../global-preloader'
 
 /*
 *   Contstants 
