@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { delay, eventChannel } from 'redux-saga'
 import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
 
 import { moduleName as module, PREPARE_GAME_START_SUCCESS, 

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
 import VKApi from '../../code/api/vk-api/vk-api'
 import { waitAuthenticationSelector, AUTH_SUCCESS, vkUserIdSelector, LOG_OUT_SUCCESS, USERID_SOCKET_EVENT } from '../authentication'
-import MainEntity from './entity/main-entity'
+import MainEntity, { iMainEntity } from './entity/main-entity'
 
 /*
 *   Contstants 
@@ -57,7 +57,7 @@ export default function reducer(state = new MainEntity(), action: any) {
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName] as MainEntity
+export const stateSelector = (state: any) => state[moduleName] as iMainEntity
 export const userSelector = createSelector(stateSelector, state => state.user)
 
 export const loadingSelector = createSelector(stateSelector, state => state.loading)

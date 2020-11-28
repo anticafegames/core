@@ -6,4 +6,5 @@ export default class Modals {
     static showCheckReadyModal: () => iActionCreatersResult
     static showRedirectToBrouserModal: () => iActionCreatersResult
     static showRoomJoinFormPageModal: (room: iShortRoom) => iActionCreatersResult
+    static showCreateRoomFormPageModal: () => iActionCreatersResult
 }

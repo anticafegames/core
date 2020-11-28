@@ -9,7 +9,6 @@ import { getSocketResult, webrtcSocketEmit } from '../../../code/webrtc'
 import { todo, errorMessage, infoMessage } from '../../../code/messages'
 import { iResult } from '../../../code/common/interfaces'
 import { getResult } from '../../../code/common'
-import { delay } from 'redux-saga'
 import { createConnection } from './peer-connection'
 import { reconnectTimer } from './reconnect'
 

@@ -1,4 +1,3 @@
-import { delay } from 'redux-saga'
 import { call, put } from 'redux-saga/effects'
 
 import createOffer from './create-offer'

@@ -1,13 +1,13 @@
 import { Record } from 'immutable'
 import { AuthUserEntity, iUser } from '../../authentication/entity/auth-user-entity'
 
-export interface iUserRecord {
+export interface iMainEntity {
     user?: AuthUserEntity | iUser,
     loading: false,
     loaded: false
 }
 
-export const defaultParams: iUserRecord = {
+export const defaultParams: iMainEntity = {
     user: undefined,
     loading: false,
     loaded: false
@@ -15,7 +15,7 @@ export const defaultParams: iUserRecord = {
 
 export default class MainEntity extends Record(defaultParams) {
 
-    constructor(params?: iUserRecord) {
+    constructor(params?: iMainEntity) {
         params ? super(params) : super()
     }
 

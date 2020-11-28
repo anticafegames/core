@@ -18,6 +18,7 @@ const createLocalStream = async () => {
             resolve({ result: { stream } })
         }
         catch (error) {
+            
             errorMessage(error)
             resolve({error: 'Ошибка getUserMedia'})
         } 

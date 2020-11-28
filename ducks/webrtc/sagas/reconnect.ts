@@ -19,10 +19,10 @@ export function* reconnectTimer(userId: string, connection: RTCPeerConnection) {
 
     //Почему-то не все устройства подключаются с первого раза, точнее не подключаются яблочники. Если в течении 5 секунд не подключились, то пробуем ещё раз
     yield delay(10000)
-    debugger
+    
     const iceConnectionState = connection.iceConnectionState
     const iceGatheringState = connection.iceGatheringState
-    debugger
+    
     if (iceConnectionState !== "connected" || iceGatheringState !== 'complete') {
         yield call(reconnectConnectionSender, userId)
     } else {

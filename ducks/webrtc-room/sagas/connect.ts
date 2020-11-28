@@ -28,7 +28,7 @@ declare var window: any
 export function* roomConnectSocketRequestSaga({ payload }: any) {
 
     try {
-
+        
         yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0)
         
         const auth = yield call(logInSaga)
@@ -39,7 +39,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
         }
         
         const localStream = yield call(createLocalStreamSaga)
-
+        
         if (!localStream) {
             Toasts.messageToast('Ошибка при подключении к камере')
             throw new Error()
@@ -47,7 +47,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
 
         const { mode, params } = payload
 
-        params.isDebug = !window.isNative && window.location.host === 'localhost:3000'
+        params.isDebug = window.location.host === 'localhost:3000'
         
         const data = { mode, params }
         yield call(socketEmit, 'room_join', data, true)

@@ -1,6 +1,10 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
-import { call, put, takeEvery, all, select } from 'redux-saga/effects'
+
+import { Record, OrderedMap, List } from 'immutable'
+import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
+
+declare const VK: any
 
 import MainEntity, { iAuthentication } from './entity/main-entity'
 import Auth from '../../code/api/vk-api/vk-api-helper'

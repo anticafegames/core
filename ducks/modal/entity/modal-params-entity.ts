@@ -3,7 +3,7 @@ import React from 'react'
 
 export interface iModalParams {
     className?: string
-    styles?: any
+    styled?: any
     canCloseOnOverlay?: boolean
     withFooter?: boolean
 }
@@ -11,7 +11,8 @@ export interface iModalParams {
 const defaultParams: iModalParams = {
     className: '',
     canCloseOnOverlay: true,
-    withFooter: true
+    withFooter: true,
+    styled: null
 }
 
 export default class MainEntity extends Record(defaultParams) {
