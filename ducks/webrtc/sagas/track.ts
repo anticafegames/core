@@ -76,11 +76,11 @@ export function* changeTracks(stream: MediaStream) {
 
         peers.forEach(peer => {
             errorMessage('changeTracks Нужно сделать DI')
-            /*const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldAudioTrack.id)
+            const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldAudioTrack.id)
             
             if(sender) {
                 sender.replaceTrack(newAudioTrack)
-            }*/
+            }
         })
     }
 
@@ -93,11 +93,11 @@ export function* changeTracks(stream: MediaStream) {
 
         peers.forEach(peer => {
             errorMessage('changeTracks Нужно сделать DI')
-            /*const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldVideoTrack.id)
+            const sender = peer.connection && peer.connection!.getSenders().find(item => (item.track && item.track.id) === oldVideoTrack.id)
             
             if(sender) {
                 sender.replaceTrack(newVideoTrack)
-            }*/
+            }
         })
     }
 }
