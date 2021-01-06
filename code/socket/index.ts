@@ -1,5 +1,6 @@
 import { eventChannel, Channel } from 'redux-saga'
 import { select, take, put, call } from 'redux-saga/effects'
+import SocketIOClient from 'socket.io-client'
 
 import { iSocketResult, iSocketAction } from '../../ducks/socket/entity/interface'
 import { SOCKET_EMIT, SOCKET_CONNECT_SUCCESS, socketSelector, socketEventsSelector, DELETE_SOCKET_EVENTS, ADD_SOCKET_EVENTS } from '../../ducks/socket'

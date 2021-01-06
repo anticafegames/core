@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import { io, Socket } from 'socket.io-client'
 import { call, put, takeEvery, all, select } from 'redux-saga/effects'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
@@ -76,8 +76,8 @@ export const socketEventsSelector = createSelector(stateSelector, state => state
 
 export function* socketConnect() {
     
-    const socket = io.connect(socketUrl, { secure: false, transports: ['websocket'] })
-    
+    const socket = io(socketUrl, { secure: false, transports: ['websocket'] })
+
     yield put({
         type: SOCKET_CONNECT_SUCCESS,
         payload: { socket }
@@ -91,7 +91,7 @@ export function* socketConnect() {
 export function* emit({ payload }: any) {
 
     const { event, data, selector } = payload
-    const socket: SocketIOClient.Socket = yield select(selector)
+    const socket: Socket = yield select(selector)
 
     if (!socket) return
 
@@ -101,7 +101,7 @@ export function* emit({ payload }: any) {
 
 export function* listenEventChannel() {
 
-    const socket: SocketIOClient.Socket = yield select(socketSelector)
+    const socket: Socket = yield select(socketSelector)
 
     if (!socket) return
 

@@ -2,9 +2,9 @@ import { List } from "immutable"
 
 export interface iSocketResultWebRtcData {
     type: string,
-    to?: string,
+    peerId?: string,
     desc: any,
-    from?: string 
+    userId?: string 
 }
 
 export type reconnectMode = 'connecting' | 'stateChange'

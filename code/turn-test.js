@@ -1,4 +1,9 @@
 //Нужно скопировать в консоль браузера, для проверки 
+
+// service coturn restart
+//  netstat -npta
+//  sudo service kurento-media-server start
+
 function checkTURNServer(turnConfig, timeout){ 
 
     return new Promise(function(resolve, reject){

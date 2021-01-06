@@ -3,7 +3,7 @@ import { call, fork, select, put } from "redux-saga/effects"
 
 import { socketEmit, socketEmitAndWaitData } from '../../../code/socket/socket-emit'
 import { todo, infoMessage, errorMessage } from '../../../code/messages'
-import { CLOSE_LOCAL_STREAM_REQUEST, DELETE_ALL_PEERS_SUCCEESS, DELETE_ALL_PEERS_REQUEST } from '../../webrtc'
+import { CLOSE_LOCAL_STREAM_REQUEST, DELETE_ALL_PEERS_SUCCEESS, DELETE_ALL_PEERS_REQUEST, START_PRESENTER } from '../../webrtc'
 import { waitBindSocket, bindSocketEvents, getSagaKeyUnbindSocket } from '../../../code/socket/bind-socket-events-helper'
 import { logInSaga, userIdSelector, isAuthorizedSelector } from '../../authentication'
 import VKApi from '../../../code/api/vk-api/vk-api'
@@ -88,6 +88,10 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
         yield put({
             type: ROOM_CONNECT_SUCCESS,
             payload: { room }
+        })
+
+        yield put({
+            type: START_PRESENTER
         })
 
         LocalStorage.setObjectToStorage(roomToken, 'room-token')
@@ -192,13 +196,13 @@ export function* kickFromRoomSaga() {
 
 export function* checkReconnectRoom() {
 
-    const hash: string = ''//yield select(hashSelector)
+    const hash: string = yield select(hashSelector)
     
     if (/^#roomid=.+/.test(hash)) {
         yield roomConnectByLink(hash)
         return
     }
-
+    
     const roomToken = yield call(LocalStorage.getObjectFromStorage, 'room-token')
     if (!roomToken) return
 

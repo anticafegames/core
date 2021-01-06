@@ -22,7 +22,7 @@ export function* listen(channel: any, userId: string) {
             stream: take(channel),
             channelClose: take(closeListenSagaKey(userId))
         })
-
+        
         if (!stream) {
             infoMessage(`Закрыли канал OnTrack userId: ${userId}`)
             return yield call(channel.close)

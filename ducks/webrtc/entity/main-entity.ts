@@ -4,6 +4,7 @@ import PeersConnectionEntity, { iPeersConnection } from "./peer-connection-entit
 export interface iMainEntity {
     localStream?: MediaStream,
     roomId?: string,
+    presenter?: iPeersConnection,
     peers: iPeersConnection[] | List<iPeersConnection>,
     update: boolean
 }
@@ -11,6 +12,7 @@ export interface iMainEntity {
 const defaultParams: iMainEntity = {
     localStream: undefined,
     roomId: undefined,
+    presenter: undefined,
     peers: List([]),
     update: false
 }
@@ -30,11 +32,20 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     addPeersConnection(connection: iPeersConnection) {
-        return this.updateIn(['peers'], list => list.merge(list.push(new PeersConnectionEntity(connection)))) as this
+
+        if(this.isPresenter(connection.userId)) {
+            return this.set('presenter', new PeersConnectionEntity(connection)) as this
+        } else {
+            return this.updateIn(['peers'], list => list.merge(list.push(new PeersConnectionEntity(connection)))) as this
+        }
     }
 
     deletePeersConnection(userId: string) {
-        return this.peerConnectionAction(userId, index => this.deleteIn(['peers', index]) as this)
+        if(this.isPresenter(userId)) {
+            return this.set('presenter', null) as this
+        } else {
+            return this.peerConnectionAction(userId, index => this.deleteIn(['peers', index]) as this) 
+        }
     }
 
     deleteAllPeers() {
@@ -42,11 +53,23 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     addTrack(userId: string, track: MediaStreamTrack) {
-        return this.peerConnectionAction(userId, index => this.setIn(['peers', index, 'track'], track) as this)
+        
+        if(this.isPresenter(userId)) { 
+
+            const ent = this.get('presenter').set('track', track)
+
+            return this.set('presenter', ent) as this
+        } else {
+            return this.peerConnectionAction(userId, index => this.setIn(['peers', index, 'track'], track) as this)
+        }
     }
 
     addChannel(userId: string, channel: RTCDataChannel) {
-        return this.peerConnectionAction(userId, index => this.setIn(['peers', index, 'channel'], channel) as this)
+        if(this.isPresenter(userId)) { 
+            return this.setIn(['presenter', 'channel'], channel) as this
+        } else {
+            return this.peerConnectionAction(userId, index => this.setIn(['peers', index, 'channel'], channel) as this)
+        }
     }
 
     updateProps() {
@@ -71,6 +94,10 @@ export default class MainEntity extends Record(defaultParams) {
         }
 
         return this
+    }
+
+    isPresenter(userId: string) {
+        return userId === 'presenter'
     }
 }
 

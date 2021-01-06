@@ -1,6 +1,6 @@
 import { put, select, all, call } from "redux-saga/effects"
 
-import { peersSelector, ADD_PEERS_SUCCESS, ADD_TRACK_SUCCESS, ADD_CHANNEL_SUCCESS, DELETE_PEERS_SUCCEESS, DELETE_ALL_PEERS_SUCCEESS } from ".."
+import { peersSelector, ADD_PEERS_SUCCESS, ADD_TRACK_SUCCESS, ADD_CHANNEL_SUCCESS, DELETE_PEERS_SUCCEESS, DELETE_ALL_PEERS_SUCCEESS, presenterConnnectionSelector, peerSelector } from ".."
 import { infoMessage, todo } from "../../../code/messages"
 import { iPeersConnection } from "../entity/peer-connection-entity"
 import { closeListenSagaKey as closeListenOnIceCandidateSagaKey } from './onicecandidate'
@@ -8,7 +8,7 @@ import { closeListenSagaKey as closeListenTrackSagaKey } from './track'
 import { closeListenSagaKey as closeListenStateChangeSagaKey } from './reconnect'
 
 export function* addConnectionSaga({ payload }: any) {
-
+debugger
     const userId: string = payload.userId
     const connection: RTCPeerConnection = payload.connection
 
@@ -49,30 +49,24 @@ export function* addChannelSaga({ payload }: any) {
 export function* leavePeerSaga({ payload }: any) {
     
     const { userId } = payload
+    let peer = yield select(peerSelector(userId))
 
-    const peers: iPeersConnection[] = yield select(peersSelector)
-    const peer = peers.find(item => item.userId === userId)
+    if (peer) {
 
-    if(peer) {
-        peer.channel && peer.channel.close()
-        peer.track && peer.track.getTracks().forEach(track => track.stop())
-        peer.connection && peer.connection.close()
-        
+        yield call(closeConnection, peer)
         yield call(closeWebRTCListeners, userId)
+
+        yield put({
+            type: DELETE_PEERS_SUCCEESS,
+            payload: { userId }
+        })
+
+        infoMessage(`Удалили соединение. UserId: ${userId}`)
     }
-
-    todo('Наверное нужно закрывать соединение, а не просто удалять из списка', 'leavePeerSaga')
-
-    yield put({
-        type: DELETE_PEERS_SUCCEESS,
-        payload: { userId }
-    })
-
-    infoMessage(`Удалили соединение. UserId: ${userId}`)
 }
 
 export function* deleteAllPeersSaga() {
-    
+
     const peers: iPeersConnection[] = yield select(peersSelector)
     peers.forEach(peer => closeConnection(peer))
 
@@ -90,8 +84,8 @@ export function closeConnection(connection: iPeersConnection) {
 }
 
 export function* closeWebRTCListeners(userId: string) {
-    yield put({type: closeListenOnIceCandidateSagaKey(userId)})
-    yield put({type: closeListenTrackSagaKey(userId)})
-    yield put({type: closeListenStateChangeSagaKey(userId)})
+    yield put({ type: closeListenOnIceCandidateSagaKey(userId) })
+    yield put({ type: closeListenTrackSagaKey(userId) })
+    yield put({ type: closeListenStateChangeSagaKey(userId) })
 }
 

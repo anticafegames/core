@@ -6,5 +6,5 @@ export const serverConfiguration: RTCConfiguration = {
     iceCandidatePoolSize: 20
 }
 
-export const offerOptions: RTCOfferOptions = { iceRestart: true }
+export const offerOptions: RTCOfferOptions = { iceRestart: true, offerToReceiveAudio: true, offerToReceiveVideo: true }
 export const answerOptions: RTCAnswerOptions = {}

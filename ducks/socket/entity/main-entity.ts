@@ -1,4 +1,5 @@
-import { Record, List } from "immutable"
+import { Record, List } from 'immutable'
+import SocketIOClient from 'socket.io-client'
 
 export interface iSocketStateEntity {
     socket?: SocketIOClient.Socket

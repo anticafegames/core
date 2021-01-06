@@ -15,6 +15,7 @@ import webRtcSocketEventSaga from './sagas/webrtc-socket'
 import { addConnectionSaga, addTrackSaga, leavePeerSaga, deleteAllPeersSaga } from './sagas/sagas-request'
 import { ROOM_CONNECT_REQUEST } from '../webrtc-room'
 import { iPeersConnection } from './entity/peer-connection-entity'
+import { startPresenter } from './sagas/presenter'
 
 /*
 *   Contstants 
@@ -52,6 +53,8 @@ export const ADD_CHANNEL_SUCCESS = `${prefix}/ADD_CHANNEL_SUCCESS`
 export const DELETE_PEERS_SUCCEESS = `${prefix}/DELETE_PEERS_SUCCEESS`
 export const DELETE_ALL_PEERS_REQUEST = `${prefix}/DELETE_ALL_PEERS_REQUEST`
 export const DELETE_ALL_PEERS_SUCCEESS = `${prefix}/DELETE_ALL_PEERS_SUCCEESS`
+
+export const START_PRESENTER = `${prefix}/START_PRESENTER`
 
 export const UPDATE_PROPS = `${prefix}/UPDATE_PROPS`
 
@@ -113,9 +116,20 @@ export default function reducer(state = new MainEntity(), action: any) {
 
 export const stateSelector = (state: any) => state[moduleName] as iMainEntity
 
+export const presenterConnnectionSelector = createSelector(stateSelector, state => state.presenter)
 export const localStreamSelector = createSelector(stateSelector, state => state.localStream)
 export const peersSelector = createSelector(stateSelector, state => (state.peers as List<iPeersConnection>).toJS())
+
 export const updatePropsSelector = createSelector(stateSelector, state => state.update)
+
+export const peerSelector = (userId: string) => createSelector(stateSelector, state => {
+
+    if(userId === 'presenter') {
+        return state.presenter
+    } else {
+        return (state.peers as List<iPeersConnection>).find(peer => peer!.userId === userId)
+    }
+})
 
 /*
 *   Action Creaters
@@ -147,12 +161,14 @@ export const socketActions: iSocketAction[] = [
 export function* saga() {
     yield all([
         bindSocketEvents(socketActions),
-        takeEvery(ROOM_JOIN_SOCKET_EVENT, roomJoinSocketSaga),
+        //takeEvery(ROOM_JOIN_SOCKET_EVENT, roomJoinSocketSaga),
         takeEvery(WEBRTC_SOCKET_EVENT, webRtcSocketEventSaga),
         takeEvery(LEAVE_SOCKET_EVENT, leavePeerSaga),
         takeEvery(ADD_PEER_CONNECTION_REQUEST, addConnectionSaga),
         takeEvery(ADD_TRACK_REQUEST, addTrackSaga),
         takeEvery(CLOSE_LOCAL_STREAM_REQUEST, closeLocalStream),
-        takeEvery(DELETE_ALL_PEERS_REQUEST, deleteAllPeersSaga)
+        takeEvery(DELETE_ALL_PEERS_REQUEST, deleteAllPeersSaga),
+
+        takeEvery(START_PRESENTER, startPresenter)
     ])
 }

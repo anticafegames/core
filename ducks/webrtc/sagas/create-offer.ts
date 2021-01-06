@@ -15,13 +15,15 @@ import { reconnectTimer } from './reconnect'
 export default function* createOfferSaga (userId: string) {
     
     infoMessage(`createOffer() userId: ${userId}`)
-
+    debugger
     const connection: RTCPeerConnection = yield call(createConnection, userId)
     
     yield fork(listenOnIceCandidate, connection, userId)
     yield fork(listenOnTrack, connection, userId)
-    
-    yield call(createDataChannel, connection, userId)
+    //connection.oniceconnectionstatechange = (ev) => { debugger; }
+    //connection.onicegatheringstatechange = (ev) => { debugger; }
+    connection.onicecandidateerror = (eroror) => { debugger; }
+    //yield call(createDataChannel, connection, userId)
     yield call(addTrack, connection)
     yield fork(reconnectTimer, userId, connection)
 
@@ -40,7 +42,8 @@ function* createOffer_success(connection: RTCPeerConnection, desc: any, userId: 
 
     yield call(setLocalDescription, connection, desc)
 
-    const data = getSocketResult('offer', userId, desc)
+    const isPresenter = userId === 'presenter' 
+    const data = getSocketResult(isPresenter ? 'presenter' : 'viewer', userId, desc)
     yield call(webrtcSocketEmit, data)
 
     infoMessage(`Создан оффер. userId: ${userId}`)

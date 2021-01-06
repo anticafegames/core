@@ -15,7 +15,7 @@ import { reconnectTimer } from "./reconnect"
 export default function* receivedOfferSaga (desc: any, userId: string) {
 
     infoMessage(`receiveOffer() userId: ${userId}`)
-
+    
     const connection: RTCPeerConnection = yield call(createConnection, userId)
 
     yield fork(listenOnIceCandidate, connection, userId)
@@ -42,8 +42,8 @@ export default function* receivedOfferSaga (desc: any, userId: string) {
     yield call(setLocalDescription, connection, desc)
     infoMessage(`Создан setLocalDescription end. userId: ${userId}`)
     
-    const data = getSocketResult('answer', userId, desc)
-    yield call(webrtcSocketEmit, data)
+    //const data = getSocketResult('answer', userId, desc)
+    //yield call(webrtcSocketEmit, data)
 
     infoMessage(`Создан answer. userId: ${userId}`)
 }
