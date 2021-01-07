@@ -1,5 +1,5 @@
 import { eventChannel } from 'redux-saga'
-import { delay } from 'redux-saga/effects'
+import { delay, put } from 'redux-saga/effects'
 
 import { leavePeerSaga } from './sagas-request'
 import createOffer from './create-offer'
@@ -20,13 +20,21 @@ export function* reconnectTimer(userId: string, connection: RTCPeerConnection) {
     yield fork(listenChangeState, userId, connection)
 
     //Почему-то не все устройства подключаются с первого раза, точнее не подключаются яблочники. Если в течении 5 секунд не подключились, то пробуем ещё раз
-    yield delay(100000)
+    const { timer, channelClose } = yield race({
+        timer: delay(100000),
+        channelClose: take(closeListenSagaKey(userId))
+    })
 
-    const iceConnectionState = connection.iceConnectionState
-    const iceGatheringState = connection.iceGatheringState
+    debugger
 
-    if (iceConnectionState !== "connected" || iceGatheringState !== 'complete') {
-        yield call(reconnectConnectionSender, userId)
+    if(timer) {
+
+        const iceConnectionState = connection.iceConnectionState
+        const iceGatheringState = connection.iceGatheringState
+
+        if (iceConnectionState !== "connected" || iceGatheringState !== 'complete') {
+            yield call(reconnectConnectionSender, userId)
+        }
     }
 }
 
@@ -114,14 +122,16 @@ export function* _listenChangeState(channel: any, userId: string, connection: RT
         const iceConnectionState = connection.iceConnectionState
         const connectionState = connection.connectionState
         const signallingState = connection.signalingState
-
+        debugger
         if (iceConnectionState === 'failed' || connectionState === 'failed' || signallingState === 'closed') {
-
+            
             const room: iRoom = yield select(roomSelector)
 
             if (!room) {
                 return
             }
+
+            yield put({ type: closeListenSagaKey(userId) })
 
             const users: iRoomPeer[] = room.users as any
             const user = users && users.find(user => user.id === userId)

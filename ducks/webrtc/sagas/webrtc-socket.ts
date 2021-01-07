@@ -14,6 +14,7 @@ export default function* webRtcSocketEventSaga(data: any) {
     
     const { type, desc, userId, error } = data.payload
 
+    if(type !== 'iceCandidate')
     yield Toasts.messageToast(type + '  ' + userId)
 
     if(error) {

@@ -12,7 +12,7 @@ export function* createConnection(userId: string) {
     todo('Ревлизовано RTCPeerConnection, нужно сделать второе тоже', 'webrtc/createOffer')
 
     const connection = new RTCPeerConnection(serverConfiguration)
-debugger
+
     yield put({
         type: ADD_PEER_CONNECTION_REQUEST,
         payload: { userId, connection }

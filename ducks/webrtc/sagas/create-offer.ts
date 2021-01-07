@@ -15,14 +15,14 @@ import { reconnectTimer } from './reconnect'
 export default function* createOfferSaga (userId: string) {
     
     infoMessage(`createOffer() userId: ${userId}`)
-    debugger
+    
     const connection: RTCPeerConnection = yield call(createConnection, userId)
     
     yield fork(listenOnIceCandidate, connection, userId)
     yield fork(listenOnTrack, connection, userId)
     //connection.oniceconnectionstatechange = (ev) => { debugger; }
     //connection.onicegatheringstatechange = (ev) => { debugger; }
-    connection.onicecandidateerror = (eroror) => { debugger; }
+    connection.onicecandidateerror = (eroror) => {  }
     //yield call(createDataChannel, connection, userId)
     yield call(addTrack, connection)
     yield fork(reconnectTimer, userId, connection)

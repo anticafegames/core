@@ -6,9 +6,10 @@ import { iPeersConnection } from "../entity/peer-connection-entity"
 import { closeListenSagaKey as closeListenOnIceCandidateSagaKey } from './onicecandidate'
 import { closeListenSagaKey as closeListenTrackSagaKey } from './track'
 import { closeListenSagaKey as closeListenStateChangeSagaKey } from './reconnect'
+import { getSocketResult, webrtcSocketEmit } from "../../../code/webrtc"
 
 export function* addConnectionSaga({ payload }: any) {
-debugger
+
     const userId: string = payload.userId
     const connection: RTCPeerConnection = payload.connection
 
@@ -55,6 +56,10 @@ export function* leavePeerSaga({ payload }: any) {
 
         yield call(closeConnection, peer)
         yield call(closeWebRTCListeners, userId)
+
+        if(userId === 'presenter') {
+            yield call(webrtcSocketEmit, getSocketResult('stop', userId, null))
+        }
 
         yield put({
             type: DELETE_PEERS_SUCCEESS,
