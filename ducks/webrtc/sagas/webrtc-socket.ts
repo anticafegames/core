@@ -11,27 +11,26 @@ import Toasts from "../../../code/alerts/toast"
 import createOfferSaga from "./create-offer"
 
 export default function* webRtcSocketEventSaga(data: any) {
-    
+
     const { type, desc, userId, error } = data.payload
 
-    if(type !== 'iceCandidate')
-    yield Toasts.messageToast(type + '  ' + userId)
-
-    if(error) {
+    if (error) {
         return yield Toasts.messageToast(error)
     }
 
     infoMessage('Webrtc', data.payload)
 
-    const findedConnection = yield findConnection(userId)  
+    const findedConnection = yield findConnection(userId)
 
     infoMessage('Webrtc create', data.payload)
 
     switch (type) {
 
         case 'create_offer':
-        
-            yield call(createOfferSaga, userId)
+
+            if (!findedConnection) {
+                yield call(createOfferSaga, userId)
+            }
 
             break
 
@@ -44,7 +43,7 @@ export default function* webRtcSocketEventSaga(data: any) {
             break
 
         case 'answer':
-            
+
             if (findedConnection) {
                 yield call(setRemoteDescription, findedConnection.connection!, desc)
             }
@@ -52,7 +51,7 @@ export default function* webRtcSocketEventSaga(data: any) {
             break
 
         case 'reconnect':
-            
+
             yield call(reconnectConnectionRecever, userId, data.payload.mode)
 
             break
@@ -62,7 +61,7 @@ export default function* webRtcSocketEventSaga(data: any) {
 
 export function* findConnection(userId: string) {
 
-    if(userId === 'presenter') {
+    if (userId === 'presenter') {
 
         const presenterConnection = yield select(presenterConnnectionSelector)
         return presenterConnection
@@ -128,7 +127,7 @@ function setRemoteDescription(connection: RTCPeerConnection, desc: any) {
 function addIceCandidate(connection: RTCPeerConnection, desc: RTCIceCandidate) {
     try {
         connection.addIceCandidate(new RTCIceCandidate(desc))
-    } catch(e) { 
+    } catch (e) {
         console.error(e)
     }
 }
