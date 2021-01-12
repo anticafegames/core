@@ -21,11 +21,9 @@ export function* reconnectTimer(userId: string, connection: RTCPeerConnection) {
 
     //Почему-то не все устройства подключаются с первого раза, точнее не подключаются яблочники. Если в течении 5 секунд не подключились, то пробуем ещё раз
     const { timer, channelClose } = yield race({
-        timer: delay(100000),
+        timer: delay(10000),
         channelClose: take(closeListenSagaKey(userId))
     })
-
-    debugger
 
     if(timer) {
 

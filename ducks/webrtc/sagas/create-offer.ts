@@ -20,9 +20,9 @@ export default function* createOfferSaga (userId: string) {
     
     yield fork(listenOnIceCandidate, connection, userId)
     yield fork(listenOnTrack, connection, userId)
-    //connection.oniceconnectionstatechange = (ev) => { debugger; }
-    //connection.onicegatheringstatechange = (ev) => { debugger; }
-    connection.onicecandidateerror = (eroror) => {  }
+    connection.oniceconnectionstatechange = (ev) => { console.error('oniceconnectionstatechange', ev) }
+    connection.onicegatheringstatechange = (ev) => { console.error('onicegatheringstatechange', ev) }
+    connection.onicecandidateerror = (eroror) => { console.error('onicecandidateerror', eroror) }
     //yield call(createDataChannel, connection, userId)
     yield call(addTrack, connection)
     yield fork(reconnectTimer, userId, connection)
