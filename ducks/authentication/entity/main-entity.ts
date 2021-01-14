@@ -11,6 +11,7 @@ export interface iAuthentication {
     anticafeToken?: string
     userId?: string,
     vkUserId?: number
+    isAdmin?: boolean
 }
 
 export const defaultParams: iAuthentication = {
@@ -19,7 +20,8 @@ export const defaultParams: iAuthentication = {
     accessToken: undefined,
     anticafeToken: undefined,
     userId: undefined,
-    vkUserId: undefined
+    vkUserId: undefined,
+    isAdmin: false
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -37,7 +39,8 @@ export default class MainEntity extends Record(defaultParams) {
             .set('anticafeToken', vkAuth && vkAuth.anticafe_token)
             .set('accessToken', vkAuth && vkAuth.access_token)
             .set('vkUserId', vkAuth && vkAuth.user_id)
-            .set('appKey', vkAuth && vkAuth.appKey) as this
+            .set('appKey', vkAuth && vkAuth.appKey)
+            .set('isAdmin', vkAuth && vkAuth.isAdmin) as this
     }
 
     setWaitAuthentication(waitAuthentication: boolean = false) {

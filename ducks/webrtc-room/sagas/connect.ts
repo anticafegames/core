@@ -10,7 +10,7 @@ import VKApi from '../../../code/api/vk-api/vk-api'
 import LocalStorage from '../../../code/local-storage'
 import Auth from '../../../code/api/vk-api/vk-api-helper'
 import createLocalStreamSaga, { waitLocalStream, } from '../../webrtc/sagas/local-stream'
-import { querySelector, hashSelector } from '../../router'
+import { querySelector, hashSelector, locationSelector, pathnameSelector } from '../../router'
 import { showGlobalPreloader, getHidePreloaderSagaKey, hidePreloader } from '../../global-preloader'
 import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector } from ".."
 import Toasts from "../../../code/alerts/toast"
@@ -22,6 +22,7 @@ import { reconnectGame } from '../../games-common/sagas/start-game'
 import Router from '../../../code/common/router'
 
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
+import { ignoreReconnect } from '../../../code/room'
 
 declare var window: any
 
@@ -196,6 +197,9 @@ export function* kickFromRoomSaga() {
 
 export function* checkReconnectRoom() {
 
+    const pathname = yield select(pathnameSelector)
+    if(ignoreReconnect(pathname)) return
+
     const hash: string = yield select(hashSelector)
     
     if (/^#roomid=.+/.test(hash)) {
@@ -250,3 +254,4 @@ export function* roomConnectByLink(hash: string) {
 
     yield call(hidePreloader, 'connectRoomByLink')
 }
+

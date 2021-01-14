@@ -6,25 +6,32 @@ import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effect
 
 import VKApi from '../../code/api/vk-api/vk-api'
 import { logInSaga } from '../authentication'
-import MainEntity from './entity/main-entity'
-import { socketEmitAndWaitData } from '../../code/socket/socket-emit'
+import MainEntity, { iMainEntity } from './entity/main-entity'
+import { socketEmitAndWaitData, socketEmit } from '../../code/socket/socket-emit'
 import { showGlobalPreloader, hidePreloader } from '../global-preloader'
 import RoomPeer, { iPeerRoomSocketResponse } from '../webrtc-room/entity/room-peer-entity'
 import { iRoomSocketResponse, iRoom } from '../webrtc-room/entity/room-entity'
 import { iSiteInfo } from './entity/site-info-entity'
+import { iSocketAction } from '../socket/entity/interface'
+import { bindSocketEvents, waitBindSocket, getSagaKeyUnbindSocket } from '../../code/socket/bind-socket-events-helper'
+import { iLog } from './entity/log-entity'
 
 /*
 *   Contstants 
 */
 
-export const moduleName = 'admin'
-export const socketEventPrefix = 'admin'
+export const moduleName = 'debug'
+export const socketEventPrefix = 'debug'
 
 const prefix = `${appName}/${moduleName}`
 
 export const LOAD_SITE_INFO_REQUEST = `${prefix}/LOAD_SITE_INFO_REQUEST`
 export const LOAD_SITE_INFO_SOCKET_EVENT = `${prefix}/LOAD_SITE_INFO_SOCKET_EVENT`
 export const LOAD_SITE_INFO_SUCCESS = `${prefix}/LOAD_SITE_INFO_SUCCESS`
+
+export const LISTEN_LOGS = `${prefix}/LISTEN_LOGS`
+export const UNBIND_LISTEN_LOGS = `${prefix}/UNBIND_LISTEN_LOGS`
+export const ADD_LOG = `${prefix}/ADD_LOG`
 
 export const CHANGE_LOADING = `${prefix}/CHANGE_LOADING`
 
@@ -52,6 +59,9 @@ export default function reducer(state = new MainEntity(), action: any) {
             return state
                 .changeLoading(payload.loading)
 
+        case ADD_LOG:
+            return state.addLog(payload)
+
         default:
             return state
 
@@ -62,8 +72,9 @@ export default function reducer(state = new MainEntity(), action: any) {
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName] as MainEntity
+export const stateSelector = (state: any) => state[moduleName] as iMainEntity
 
+export const logsSelector = createSelector(stateSelector, state => state.logs.reverse().toJS() as iLog[])
 
 /*
 *   Action Creaters
@@ -78,6 +89,18 @@ export function loadSiteInfo() {
 export function clearSiteInfo() {
     return {
         type: CLEAR_SITE_INFO
+    }
+}
+
+export function listenLogs() {
+    return {
+        type: LISTEN_LOGS
+    }
+}
+
+export function unbindListenLogs() {
+    return {
+        type: UNBIND_LISTEN_LOGS
     }
 }
 
@@ -138,8 +161,30 @@ export function* loadSiteInfoSocketSaga() {
     yield call(hidePreloader, 'admin-load-site-info')
 }
 
+export function* listenLogsSaga() {
+
+    const socketAction: iSocketAction = {
+        socketKey: `${socketEventPrefix}/log`,
+        sagaKey: ADD_LOG
+    }
+
+    yield fork(bindSocketEvents, [socketAction])
+    yield call(waitBindSocket, ADD_LOG)
+
+    const data = {}
+    return yield call(socketEmit, `${socketEventPrefix}/listen-logs`, {}) 
+}
+
+export function* unbindListenLogsSaga() {
+    yield put({
+        type: getSagaKeyUnbindSocket(ADD_LOG)
+    })
+}
+
 export function* saga() {
     yield all([
-        takeEvery(LOAD_SITE_INFO_REQUEST, loadSiteInfoSocketSaga)
+        takeEvery(LOAD_SITE_INFO_REQUEST, loadSiteInfoSocketSaga),
+        takeEvery(LISTEN_LOGS, listenLogsSaga),
+        takeEvery(UNBIND_LISTEN_LOGS, unbindListenLogsSaga)
     ])
 }

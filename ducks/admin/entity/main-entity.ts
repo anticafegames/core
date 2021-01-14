@@ -1,23 +1,44 @@
 import { Record, List } from "immutable"
 import SiteInfo, { iSiteInfo } from "./site-info-entity"
-import { isString } from "util"
+
 import RoomEntity, { iRoom } from "../../webrtc-room/entity/room-entity"
-import RoomPeerEntity from "../../webrtc-room/entity/room-peer-entity"
+import RoomPeerEntity, { iRoomPeer } from "../../webrtc-room/entity/room-peer-entity"
+import { iLog } from "./log-entity"
 
 export interface iMainEntity {
-    siteInfo?: SiteInfo | iSiteInfo
+    rooms: List<iRoom>
+    users: List<iRoomPeer>
+    logs: List<iLog>
     loading: boolean
+    loaded: boolean
 }
 
 const defaultParams: iMainEntity = {
-    siteInfo: undefined,
-    loading: false
+    rooms: List([]),
+    users: List([]),
+    logs: List([]),
+    loading: false,
+    loaded: false
 }
 
 export default class MainEntity extends Record(defaultParams) {
 
     constructor(params?: iMainEntity) {
         params ? super(params) : super()
+    }
+
+    addLog(log: iLog) {
+        return this.update('logs', (logs: List<iLog>) => {
+
+            let newLogs = logs.push(log)
+
+            if(newLogs.size > 100) {
+                newLogs = newLogs.splice(0, newLogs.size - 100).toList()
+            }
+
+            return newLogs
+
+        }) as this
     }
 
     setSiteInfo(siteInfo: iSiteInfo) {

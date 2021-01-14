@@ -12,4 +12,5 @@ export interface iAnticafeAuthResponse {
     user_id: number
     anticafe_token: string
     appKey: iAppKey
+    isAdmin: boolean
 }

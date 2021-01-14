@@ -18,7 +18,7 @@ export const defaultParams: iUser = {
     first_name: '',
     last_name: '',
     nickname: '',
-    profilePhoto: '',
+    profilePhoto: ''
 }
 
 export class AuthUserEntity extends Record(defaultParams) {
