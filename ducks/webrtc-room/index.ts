@@ -10,7 +10,7 @@ import MainEntity, { iMainEntity } from './entity/main-entity'
 import { checkReconnectRoom, roomConnectSocketSuccessSaga, leavePeerRoomSocketEventSaga, roomJoinSocketEventSaga, roomConnectSocketRequestSaga, leaveFromRoomSaga, kickFromRoomSaga, knockOnRoomEmitSaga } from './sagas/connect'
 import { changeOwnerIdSaga, changeOwnerEmitSaga, kickUserSaga, canJoinRoomSaga, canJoinRoomSuccessSaga } from './sagas/owner-events'
 import { iRoom } from './entity/room-entity'
-import RoomPeerEntity from './entity/room-peer-entity'
+import RoomPeerEntity, { iRoomPeer } from './entity/room-peer-entity'
 
 /*
 *   Contstants 
@@ -91,7 +91,7 @@ export default function reducer(state = new MainEntity(), action: any) {
 
 export const stateSelector = (state: any) => state[moduleName] as iMainEntity
 export const roomSelector = createSelector(stateSelector, state => state.room as iRoom)
-export const roomUsersSelector = createSelector(roomSelector, room => (room && (room.users as List<RoomPeerEntity>).toJS()) || [])
+export const roomUsersSelector = createSelector(roomSelector, room => ((room && (room.users as List<RoomPeerEntity>).toJS()) || []) as iRoomPeer[]) 
 export const roomUserEntitiesSelector = createSelector(roomSelector, room => (room && (room.users as List<RoomPeerEntity>)) || [])
 
 export const roomIdSelector = createSelector(roomSelector, state => state && state.id)
@@ -99,6 +99,10 @@ export const nameSelector = createSelector(roomSelector, state => state.name)
 
 export const connectedRoomSelector = createSelector(stateSelector, state => !!state.room)
 export const IAmOwnerSelector = createSelector(roomSelector, room => room && room.isOwner)
+
+export const debugParamsSeletor = createSelector(roomSelector, state => state && state.debugParams)
+export const isDebugSelector = createSelector(debugParamsSeletor, state => state && state.isDebug)
+export const withoutWebrtcSelector = createSelector(debugParamsSeletor, state => state && state.isDebug && state.withoutWebrtc)
 
 /*
 *   Action Creaters

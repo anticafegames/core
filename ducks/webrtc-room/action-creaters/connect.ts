@@ -1,5 +1,6 @@
-import { iJoinRoomParams, iRoomJoinMode, iRegRoomParams } from "../entity/interface"
+import { iJoinRoomParams, iRoomJoinMode } from "../entity/interface"
 import { ROOM_CONNECT_REQUEST, LEAVE_FROM_ROOM_REQUEST, KNOCK_ON_ROOM_REQUEST } from ".."
+import { iCreateFormResult } from "../entity/room-reg-params-entity"
 
 export function connectToRoom(params: Partial<iJoinRoomParams>) {
 
@@ -14,7 +15,7 @@ export function connectToRoom(params: Partial<iJoinRoomParams>) {
     }
 }
 
-export function createRoom(params: Partial<iRegRoomParams>) {
+export function createRoom(params: iCreateFormResult) {
 
     const mode: iRoomJoinMode = 'create'
 

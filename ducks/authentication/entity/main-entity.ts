@@ -12,6 +12,7 @@ export interface iAuthentication {
     userId?: string,
     vkUserId?: number
     isAdmin?: boolean
+    isDeveloper?: boolean
 }
 
 export const defaultParams: iAuthentication = {
@@ -21,7 +22,8 @@ export const defaultParams: iAuthentication = {
     anticafeToken: undefined,
     userId: undefined,
     vkUserId: undefined,
-    isAdmin: false
+    isAdmin: false,
+    isDeveloper: false
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -40,7 +42,8 @@ export default class MainEntity extends Record(defaultParams) {
             .set('accessToken', vkAuth && vkAuth.access_token)
             .set('vkUserId', vkAuth && vkAuth.user_id)
             .set('appKey', vkAuth && vkAuth.appKey)
-            .set('isAdmin', vkAuth && vkAuth.isAdmin) as this
+            .set('isAdmin', vkAuth && vkAuth.isAdmin)
+            .set('isDeveloper', vkAuth && vkAuth.isDeveloper) as this
     }
 
     setWaitAuthentication(waitAuthentication: boolean = false) {

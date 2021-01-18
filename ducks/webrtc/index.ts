@@ -16,6 +16,7 @@ import { addConnectionSaga, addTrackSaga, leavePeerSaga, deleteAllPeersSaga } fr
 import { ROOM_CONNECT_REQUEST } from '../webrtc-room'
 import { iPeersConnection } from './entity/peer-connection-entity'
 import { startPresenter } from './sagas/presenter'
+import { createFakeRoomConnectionsSaga, createFakeConnectionSaga } from './sagas/fake-connection'
 
 /*
 *   Contstants 

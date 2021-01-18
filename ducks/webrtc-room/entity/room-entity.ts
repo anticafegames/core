@@ -1,6 +1,7 @@
 import { Record, List } from 'immutable'
 import PeerEntity, { iRoomPeer } from './room-peer-entity'
 import { roomStatus } from './interface'
+import DebugParamsEntity, { iDebugRoomParams, defaultParams as defaultDebugRoomsParams } from './debug-room-params-entity'
 
 export interface iRoomSocketResponse {
     name: string
@@ -21,6 +22,7 @@ export interface iRoom {
     isOwner: boolean
     status: roomStatus
     maxUsers: number
+    debugParams: iDebugRoomParams
 }
 
 export const defaultParams: iRoom = {
@@ -31,7 +33,8 @@ export const defaultParams: iRoom = {
     isOwner: false,
     openRoom: false,
     status: 'wait',
-    maxUsers: 6
+    maxUsers: 6,
+    debugParams: defaultDebugRoomsParams
 }
 
 export default class RoomEntity extends Record(defaultParams) {

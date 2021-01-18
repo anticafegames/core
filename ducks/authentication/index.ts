@@ -75,7 +75,9 @@ export const accessTokenSelector = createSelector(stateSelector, state => state.
 export const anticafeTokenSelector = createSelector(stateSelector, state => state.anticafeToken)
 export const vkUserIdSelector = createSelector(stateSelector, state => state.vkUserId)
 export const userIdSelector = createSelector(stateSelector, state => state.userId)
+
 export const isAdminSelector = createSelector(stateSelector, state => !!state.isAdmin || false)
+export const isDeveloperSelector = createSelector(stateSelector, state => !!state.isDeveloper || false)
 
 export const waitAuthenticationSelector = createSelector(stateSelector, state => state.waitAuthentication)
 export const appKeySelector = createSelector(stateSelector, state => state.appKey)

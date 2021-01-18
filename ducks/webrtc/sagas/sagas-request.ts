@@ -12,8 +12,9 @@ export function* addConnectionSaga({ payload }: any) {
 
     const userId: string = payload.userId
     const connection: RTCPeerConnection = payload.connection
-
-    const peerConnection: iPeersConnection = { userId, connection }
+    const track: MediaStream = payload.track
+    debugger
+    const peerConnection: iPeersConnection = { userId, connection, track }
 
     yield put({
         type: ADD_PEERS_SUCCESS,

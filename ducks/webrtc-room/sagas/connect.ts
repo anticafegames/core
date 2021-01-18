@@ -12,7 +12,7 @@ import Auth from '../../../code/api/vk-api/vk-api-helper'
 import createLocalStreamSaga, { waitLocalStream, } from '../../webrtc/sagas/local-stream'
 import { querySelector, hashSelector, locationSelector, pathnameSelector } from '../../router'
 import { showGlobalPreloader, getHidePreloaderSagaKey, hidePreloader } from '../../global-preloader'
-import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector } from ".."
+import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector, withoutWebrtcSelector } from ".."
 import Toasts from "../../../code/alerts/toast"
 import { iSocketAction } from "../../socket/entity/interface"
 import { iShortRoom } from "../../webrtc-rooms/entity/rooms-entity"
@@ -20,36 +20,38 @@ import { connectToRoom } from "../action-creaters/connect"
 import Modals from "../../../../core/code/modals"
 import { reconnectGame } from '../../games-common/sagas/start-game'
 import Router from '../../../code/common/router'
+import regRoomParams from '../entity/room-reg-params-entity'
 
 import { iRoomPeer, iPeerRoomSocketResponse } from '../entity/room-peer-entity'
 import { ignoreReconnect } from '../../../code/room'
+import { createFakeConnectionSaga, createFakeRoomConnectionsSaga } from '../../webrtc/sagas/fake-connection'
 
 declare var window: any
 
 export function* roomConnectSocketRequestSaga({ payload }: any) {
 
     try {
-        
+
         yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0)
-        
+
         const auth = yield call(logInSaga)
 
         if (!auth) {
             Toasts.messageToast('Ошибка при авторизации')
             throw new Error()
         }
-        
+
         const localStream = yield call(createLocalStreamSaga)
-        
+
         if (!localStream) {
             Toasts.messageToast('Ошибка при подключении к камере')
             throw new Error()
         }
 
-        const { mode, params } = payload
+        let { mode, params } = payload
 
-        params.isDebug = window.location.host === 'localhost:3000'
-        
+        params = mode === 'create' ? regRoomParams(params) : params
+
         const data = { mode, params }
         yield call(socketEmit, 'room_join', data, true)
 
@@ -61,11 +63,11 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
 export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
     let { error, result, mode } = payload
-    
+
     if (!error) {
-        
+
         const { room, roomToken, game } = result
-        
+
         if (mode === 'knock') {
 
             const localStream = yield call(createLocalStreamSaga)
@@ -81,19 +83,28 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
         const userId = yield select(userIdSelector)
         room.isOwner = userId === room.ownerId
-        
-        if(room.status === 'game' && game) {
+
+        if (room.status === 'game' && game) {
             yield call(reconnectGame, game)
         }
-        
+
         yield put({
             type: ROOM_CONNECT_SUCCESS,
             payload: { room }
         })
 
-        yield put({
-            type: START_PRESENTER
-        })
+        const debugRoomWithoutWebrtc = yield select(withoutWebrtcSelector)
+
+        if(!debugRoomWithoutWebrtc) {
+
+            yield put({
+                type: START_PRESENTER
+            })
+
+        } else {
+
+            yield createFakeRoomConnectionsSaga()
+        }
 
         LocalStorage.setObjectToStorage(roomToken, 'room-token')
 
@@ -133,7 +144,7 @@ export function* roomJoinSocketEventSaga({ payload }: any) {
     const { userId: id, vkId } = payload
 
     const roomPeers: iRoomPeer[] = yield select(roomUsersSelector)
-    if (roomPeers.some(peer => peer.id === id)) return 
+    if (roomPeers.some(peer => peer.id === id)) return
 
     const [user] = (yield call(VKApi.loadRoomPeers, [{ id, vkId }])) as any[]
 
@@ -143,6 +154,12 @@ export function* roomJoinSocketEventSaga({ payload }: any) {
         type: ADD_ROOM_PEER,
         payload: { user }
     })
+
+    const debugRoomWithoutWebrtc = yield select(withoutWebrtcSelector)
+
+    if (debugRoomWithoutWebrtc) {
+        yield createFakeConnectionSaga(id)
+    }
 }
 
 export function* leavePeerRoomSocketEventSaga({ payload }: any) {
@@ -198,15 +215,15 @@ export function* kickFromRoomSaga() {
 export function* checkReconnectRoom() {
 
     const pathname = yield select(pathnameSelector)
-    if(ignoreReconnect(pathname)) return
+    if (ignoreReconnect(pathname)) return
 
     const hash: string = yield select(hashSelector)
-    
+
     if (/^#roomid=.+/.test(hash)) {
         yield roomConnectByLink(hash)
         return
     }
-    
+
     const roomToken = yield call(LocalStorage.getObjectFromStorage, 'room-token')
     if (!roomToken) return
 
@@ -232,8 +249,8 @@ export function* checkReconnectRoom() {
 
 export function* roomConnectByLink(hash: string) {
 
-    const [,roomId] = hash.split('roomid=')
-    
+    const [, roomId] = hash.split('roomid=')
+
     yield fork(showGlobalPreloader, 'connectRoomByLink', 'connectRoomByLink', 0, true)
 
     const { error, result } = yield call(socketEmitAndWaitData, 'room_info', { roomId }, false, ROOM_INFO_SOCKET_EVENT)
