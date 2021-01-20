@@ -120,7 +120,7 @@ export function* _listenChangeState(channel: any, userId: string, connection: RT
         const iceConnectionState = connection.iceConnectionState
         const connectionState = connection.connectionState
         const signallingState = connection.signalingState
-        debugger
+        
         if (iceConnectionState === 'failed' || connectionState === 'failed' || signallingState === 'closed') {
             
             const room: iRoom = yield select(roomSelector)
