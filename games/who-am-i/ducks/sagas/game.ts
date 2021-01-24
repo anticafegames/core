@@ -1,9 +1,9 @@
 import { select, call, put } from 'redux-saga/effects'
 
-import { IAmOwnerSelector } from '../../../webrtc-room'
+import { IAmOwnerSelector } from '../../../../ducks/webrtc-room'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import { socketPrefix, START_GAME_SUCCESS, SHOW_MY_NAME_SUCCESS, SHOW_NAME_SUCCESS } from '../constants'
-import { closeElement } from '../../../modal'
+import { closeElement } from '../../../../ducks/modal'
 import Toasts from '../../../../code/alerts/toast'
 
 export function* startGameEmitSaga() {

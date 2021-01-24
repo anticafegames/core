@@ -1,4 +1,4 @@
-import { iActionCreatersResult } from "../../ducks/interfaces";
+import { iActionCreatersResult } from "../../../code/ducks/interfaces";
 
 //DI
 class Modals {

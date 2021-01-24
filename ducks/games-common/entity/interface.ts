@@ -7,6 +7,9 @@ export interface iReconnectGameState {
 
 export interface iGame {
     canStartGame: any
+    entity: any
+    reducer: any
+    bindSagas: any
     bindSocketEvents: any
     unbindSocketEvents: any
     stopGame: any

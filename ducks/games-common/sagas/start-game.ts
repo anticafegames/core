@@ -1,7 +1,7 @@
 import { call, put, select, fork } from 'redux-saga/effects'
 
 import { gameKey, iReconnectGameState } from '../entity/interface'
-import { WAIT_READY_START, USER_IS_READY, WAIT_READY_STOP, gameKeySelector, STOP_GAME_SUCCESS, RECONNECT_GAME } from '..'
+import { WAIT_READY_START, USER_IS_READY, WAIT_READY_STOP, gameKeySelector, STOP_GAME_SUCCESS, RECONNECT_GAME, STOP_GAME_SAGAS, CREATE_GAME_ENTITY } from '..'
 import { iRoomPeer } from '../../webrtc-room/entity/room-peer-entity'
 import { roomUsersSelector, CHANGE_ROOM_STATUS } from '../../webrtc-room'
 import Modals from '../../../../core/code/modals'
@@ -21,11 +21,10 @@ export function* prepareGameSaga({ payload }: any) {
 
     const { gameKey } = payload
 
-    if(!(yield call(canStartGame, gameKey))) {
+    if (!(yield call(canStartGame, gameKey))) {
         return
     }
 
-    yield fork(bindGameSocketEvents, gameKey)
     yield checkReadyStart(gameKey)
 }
 
@@ -41,17 +40,17 @@ export function* checkReadyStart(gameKey: gameKey) {
 
     const readyUsers = [user.id]
 
-    yield put({
+    /*yield put({
         type: WAIT_READY_START,
-        payload: { usersCount: roomPeers.length + 1, game: gameKey, readyUsers }
+        payload: { usersCount: roomPeers.length + 1, gameKey, readyUsers }
     })
 
     yield put({
         type: CHANGE_ROOM_STATUS,
         payload: { status: 'check-ready' }
-    })
+    })*/
 
-    yield put(Modals.showCheckReadyModal())
+    //yield put(Modals.showCheckReadyModal())
     yield call(socketEmit, 'game-common/ready-start', { gameKey, readyUsers })
 }
 
@@ -64,15 +63,15 @@ export function* stopGameEmitSaga() {
 */
 
 export function* readyStartSaga({ payload }: any) {
-    
+
     const { gameKey, readyUsers } = payload
     const roomPeers: iRoomPeer[] = yield select(roomUsersSelector)
 
-    yield fork(bindGameSocketEvents, gameKey)
+    yield fork(bindGame, gameKey)
 
     yield put({
         type: WAIT_READY_START,
-        payload: { usersCount: roomPeers.length + 1, game: gameKey, readyUsers }
+        payload: { usersCount: roomPeers.length + 1, gameKey, readyUsers }
     })
 
     yield put({
@@ -97,12 +96,12 @@ export function* iReadySaga() {
 }
 
 export function* cancelPrepareGameSaga() {
-    yield call(socketEmit, 'game-common/cancel-prepare-game', { })
+    yield call(socketEmit, 'game-common/cancel-prepare-game', {})
 }
 
 /*
 * Общие
-*/ 
+*/
 
 export function* cancelPrepareGameSocketEventSaga() {
 
@@ -116,14 +115,31 @@ export function* cancelPrepareGameSocketEventSaga() {
         payload: { status: 'wait' }
     })
 
-    yield bindGameSocketEvents(gameKey, true)
+    yield unbindGame(gameKey)
 }
 
-export function* bindGameSocketEvents(gameKey: gameKey, unbind: boolean = false) {
-    const game = getGame(gameKey)
-    const action = unbind ? game.unbindSocketEvents : game.bindSocketEvents
+export function* bindGame(gameKey: gameKey) {
 
-    yield call(action)
+    const game = getGame(gameKey)
+
+    const entity = new game.entity()
+    const reducer = game.reducer
+
+    yield put({
+        type: CREATE_GAME_ENTITY,
+        payload: { gameKey, game: entity, reducer }
+    })
+
+    yield fork(game.bindSagas)
+    yield call(game.bindSocketEvents)
+}
+
+export function* unbindGame(gameKey: gameKey) {
+
+    const game = getGame(gameKey)
+
+    yield call(game.unbindSocketEvents)
+    yield put({ type: STOP_GAME_SAGAS })
 }
 
 export function* endPrepareGameSaga() {
@@ -145,6 +161,8 @@ export function* stopGameSaga() {
         type: STOP_GAME_SUCCESS
     })
 
+    yield unbindGame(gameKey)
+
     const game = getGame(gameKey)
     yield call(game.stopGame)
 }
@@ -153,10 +171,11 @@ export function* reconnectGame(state: iReconnectGameState) {
 
     const game = getGame(state.gameKey)
 
-    if(!game.reconnectGame) return null
+    if (!game.reconnectGame) return null
 
+    yield fork(bindGame, state.gameKey) 
     yield call(game.reconnectGame, state)
-    
+
     yield put({
         type: RECONNECT_GAME,
         payload: { state }

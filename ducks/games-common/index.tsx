@@ -1,4 +1,4 @@
-import { appName } from '../../config/app-config'
+import { appName, gamePrefix } from '../../config/app-config'
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
@@ -43,18 +43,27 @@ export const STOP_GAME_SUCCESS = `${prefix}/STOP_GAME_SUCCESS`
 
 export const RECONNECT_GAME = `${prefix}/RECONNECT_GAME`
 
+export const CREATE_GAME_ENTITY = `${prefix}/CREATE_GAME_ENTITY`
+export const STOP_GAME_SAGAS = `${prefix}/STOP_GAME_SAGAS`
+
 /*
 *   Reducer
 */
 
 export default function reducer(state = new MainEntity(), action: any) {
-    const { type, payload } = action
+
+    const type = action.type
+    const payload = action.payload
 
     switch (type) {
 
+        case CREATE_GAME_ENTITY: 
+            return state
+                .createGameEntity(payload.gameKey, payload.game, payload.reducer)
+
         case WAIT_READY_START:
             return state
-                .waitReadyStart(payload.readyUsers, payload.game, payload.usersCount)
+                .waitReadyStart(payload.readyUsers, payload.usersCount)
 
         case USER_IS_READY:
             return state
@@ -68,24 +77,33 @@ export default function reducer(state = new MainEntity(), action: any) {
             return state
                 .stopGame()
 
-        case RECONNECT_GAME:
+        /*case RECONNECT_GAME:
             return state
-                .reconnect(payload.state)
+                .reconnect(payload.state)*/
 
-        default:
-            return state
+        /*default:
+            return state*/
 
     }
+
+    if(type.startsWith(gamePrefix)) {
+        return state.gameReducer(action)
+    }
+
+    return state
 }
 
 /*
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName] as iMainEntity
+export const stateSelector = (state: any) => state[moduleName] as MainEntity
 
-export const readyUsersSelector = createSelector(stateSelector, state => state.readyUsers.toJS() as string[])
-export const gameKeySelector = createSelector(stateSelector, state => state.game)
+export const readyUsersSelector = createSelector(stateSelector, state => state.readyUsers as string[])
+
+export const gameKeySelector = createSelector(stateSelector, state => state.gameCreated && state.gameEntity.gameKey)
+export const gameCreated = createSelector(stateSelector, state => state.gameCreated)
+export const gameSelector = createSelector(stateSelector, state => state.gameCreated && state.gameEntity.game)
 
 /*
 *   Action Creaters
@@ -142,7 +160,6 @@ export const socketActions: iSocketAction[] = [
 export function* saga() {
     yield all([
         bindSocketEvents(socketActions),
-        takeEvery(READY_START_SOCKET_EVENT, readyStartSaga),
         takeEvery(CANCEL_PREPARE_GAME_SOCKET_EVENT, cancelPrepareGameSocketEventSaga),
         takeEvery(END_PREPARE_GAME_SOCKET_EVENT, endPrepareGameSaga),
         takeEvery(STOP_GAME_SOCKET_EVENT, stopGameSaga),

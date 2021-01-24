@@ -2,10 +2,10 @@ import { select, call } from "redux-saga/effects"
 import { List } from "immutable"
 
 import { iGameUserResponce, iGameUser } from "./game-user-entity"
-import RoomPeerEntity, { iRoomPeer, iPeerRoomSocketResponse } from '../../../webrtc-room/entity/room-peer-entity'
-import { roomUsersSelector } from '../../../webrtc-room'
-import { iUser, AuthUserEntity } from '../../../authentication/entity/auth-user-entity'
-import { userSelector } from "../../../user"
+import RoomPeerEntity, { iRoomPeer, iPeerRoomSocketResponse } from '../../../../ducks/webrtc-room/entity/room-peer-entity'
+import { roomUsersSelector } from '../../../../ducks/webrtc-room'
+import { iUser, AuthUserEntity } from '../../../../ducks/authentication/entity/auth-user-entity'
+import { userSelector } from "../../../../ducks/user"
 import { errorMessage } from "../../../../code/messages"
 import { iReconnectStateResponce } from "./interface"
 import VKApi from "../../../../code/api/vk-api/vk-api"

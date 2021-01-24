@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
-import { call, put, takeEvery, all, select, take } from 'redux-saga/effects'
+import { call, put, takeEvery, all, select, take, race } from 'redux-saga/effects'
 
 import { moduleName as module, PREPARE_GAME_START_SUCCESS, 
     PREPARE_GAME_START_SOCKET_EVENT, STOP_GAME_SUCCESS, 
@@ -10,11 +10,12 @@ import MainEntity, { iMainEntity } from './entity/main-entity'
 import { prepareStartSaga, selectNameEmitSaga, selectNameSocketEventSaga } from './sagas/prepare'
 import { iGameUser } from './entity/game-user-entity'
 import { sortBuyOrdernum } from './entity/converter'
-import { iGame } from '../../games-common/entity/interface'
+import { iGame } from '../../../ducks/games-common/entity/interface'
 import { canStartGame } from './sagas/can-start-game'
 import { bindSocketEvents, unbindSocketEvents } from './sagas/bind-socket-events'
 import { stopGameSuccess, reconnectGame } from './sagas'
 import { startGameEmitSaga, startGameSocketSaga, showNameEmitSaga, showNameSocketSaga } from './sagas/game'
+import { gameSelector, STOP_GAME_SAGAS } from '../../../ducks/games-common'
 
 /*
 *   Contstants 
@@ -26,7 +27,7 @@ export const moduleName = module
 *   Reducer
 */
 
-export default function reducer(state = new MainEntity(), action: any) {
+export const reducer = (state = new MainEntity(), action: any) => {
     const { type, payload } = action
 
     switch (type) {
@@ -77,10 +78,10 @@ export default function reducer(state = new MainEntity(), action: any) {
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName] as iMainEntity
-export const gameUsersSelector = createSelector(stateSelector, state => ((state.gameUsers as List<any>).toJS() as iGameUser[]).sort(sortBuyOrdernum))
-export const fillNameLoadingSelector = createSelector(stateSelector, state => state.fillNameLoading)
-export const gameStateSelector = createSelector(stateSelector, state => state.gameState)
+
+export const gameUsersSelector = createSelector(gameSelector, state => ((state.gameUsers as List<any>).toJS() as iGameUser[]).sort(sortBuyOrdernum))
+export const fillNameLoadingSelector = createSelector(gameSelector, state => state.fillNameLoading)
+export const gameStateSelector = createSelector(gameSelector, state => state.gameState)
 
 /*
 *   Action Creaters
@@ -108,8 +109,9 @@ export function showName(userId: string) {
 *   Sagas
 */
 
-export function* saga() {
-    yield all([
+export function* bindSagas() {
+
+    const sagasEvents = [
         takeEvery(PREPARE_GAME_START_SOCKET_EVENT, prepareStartSaga),
         takeEvery(SELECT_NAME_SOCKET_EVENT, selectNameSocketEventSaga),
         takeEvery(START_GAME_SOCKET_EVENT, startGameSocketSaga),
@@ -118,11 +120,18 @@ export function* saga() {
         takeEvery(SELECT_NAME_REQUEST, selectNameEmitSaga),
         takeEvery(START_GAME_REQUEST, startGameEmitSaga),
         takeEvery(SHOW_NAME_REQUEST, showNameEmitSaga)
-    ])
+    ]
+
+    /*yield race({ 
+        saga: all(sagasEvents),
+        stopSaga: take(STOP_GAME_SAGAS)
+    })*/
+
+    yield all(sagasEvents)
 }
 
 /*
 * Game
 */
 
-export const game: iGame = { canStartGame, bindSocketEvents, unbindSocketEvents, stopGame: stopGameSuccess, reconnectGame }
+export const game: iGame = { canStartGame, entity: MainEntity, reducer, bindSagas, bindSocketEvents, unbindSocketEvents, stopGame: stopGameSuccess, reconnectGame }

@@ -1,6 +1,7 @@
 import { socketUrl as _socketUrl, apiUrl as _apiUrl } from './api-config'
 
 export const appName = 'AnticafeGames'
+export const gamePrefix = `${appName}/game`
 
 export const socketUrl = _socketUrl
 export const apiUrl = _apiUrl

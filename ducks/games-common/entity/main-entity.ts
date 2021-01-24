@@ -1,16 +1,18 @@
-import { List, Record } from "immutable"
-import { gameKey, iReconnectGameState } from "./interface"
+import { List, Record } from 'immutable'
+
+import { gameKey, iReconnectGameState } from './interface'
+import GameEntity from './game-entity'
 
 export interface iMainEntity {
     readyUsers: List<string>
     usersCount: number
-    game?: gameKey
+    game?: GameEntity
 }
 
 const defaultParams: iMainEntity = {
     readyUsers: List([]),
     usersCount: 0,
-    game: undefined
+    game: new GameEntity()
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -19,10 +21,9 @@ export default class MainEntity extends Record(defaultParams) {
         params ? super(params) : super()
     }
 
-    waitReadyStart(readyUsers: string[], game: gameKey, usersCount: number) {
+    waitReadyStart(readyUsers: string[], usersCount: number) {
         return this
             .set('readyUsers', List(readyUsers))
-            .set('game', game)
             .set('usersCount', usersCount) as this
     }
 
@@ -30,6 +31,11 @@ export default class MainEntity extends Record(defaultParams) {
         return this
             .set('readyUsers', List([]))
             .set('usersCount', 0) as this
+    }
+
+    createGameEntity(gameKey: gameKey, game: any, reducer: any) {
+        return this
+            .updateIn(['game'], (gameEntity: GameEntity) => gameEntity.createGame(gameKey, game, reducer)) as this
     }
 
     userIsReady(userId: string) {
@@ -42,14 +48,30 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     stopGame() {
-        return this.set('game', undefined) as this
+        return this
+            .updateIn(['game'], (game: GameEntity) => game.stopGame()) as this
     }
 
-    reconnect(state: iReconnectGameState) {
-        return this.set('game', state.gameKey)
+    reconnect(state: iReconnectGameState, game: any) {
+        return this
+            .set('gameKey', undefined)
+            .set('game', undefined) as this
+    }
+
+    gameReducer(action: any) {
+        return this
+            .updateIn(['game'], (game: GameEntity) => game.reducer(action)) as this
     }
 
     get readyUsers() {
         return this.get('readyUsers') as string[]
+    }
+
+    get gameCreated() {
+        return this.gameEntity.gameCreated
+    }
+
+    get gameEntity() {
+        return this.get('game') as GameEntity
     }
 }

@@ -1,5 +1,5 @@
 import { List, Record } from "immutable"
-import RoomPeerEntity, { iRoomPeer } from '../../../webrtc-room/entity/room-peer-entity'
+import RoomPeerEntity, { iRoomPeer } from '../../../../ducks/webrtc-room/entity/room-peer-entity'
 
 export interface iGameUser {
     userId: string

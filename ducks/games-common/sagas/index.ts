@@ -1,5 +1,5 @@
 import { gameKey, iGame } from '../entity/interface'
-import games from '../games'
+import games from '../../../games/who-am-i/games'
 
 export const getGame = (gameKey: gameKey): iGame => {
 

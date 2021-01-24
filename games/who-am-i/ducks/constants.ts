@@ -1,9 +1,10 @@
-import { appName } from '../../../config/app-config'
+import { gamePrefix } from '../../../config/app-config'
 
-export const moduleName = 'game/who-am-i'
+export const moduleName = 'who-am-i'
+export const gameName = 'Кто Я?'
 
-export const socketPrefix = moduleName
-const prefix = `${appName}/${moduleName}`
+export const socketPrefix = `game/${moduleName}`
+const prefix = `${gamePrefix}/${moduleName}`
 
 export const PREPARE_GAME_START_SOCKET_EVENT = `${prefix}/PREPARE_GAME_START_SOCKET_EVENT`
 export const PREPARE_GAME_START_SUCCESS = `${prefix}/PREPARE_GAME_START_SUCCESS`
