@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take, race } from 'redux-saga/effects'
 
-import { moduleName as module, PREPARE_GAME_START_SOCKET_EVENT } from './constants'
+import { moduleName as module, PREPARE_GAME_START_SOCKET_EVENT, START_GAME_REQUEST, START_GAME_SOCKET_EVENT } from './constants'
 import MainEntity, { iMainEntity } from './entity/main-entity'
 import { prepareStartSaga } from './sagas/prepare'
 import { iGameDuck } from '../../../ducks/games-common/entity/interface'
@@ -10,6 +10,7 @@ import { canStartGame } from './sagas/can-start-game'
 import { bindSocketEvents, unbindSocketEvents } from './sagas/bind-socket-events'
 import { stopGameSuccess, reconnectGame } from './sagas'
 import { gameSelector, STOP_GAME_SAGAS } from '../../../ducks/games-common'
+import { startGameEmitSaga, startGameSocketSaga } from './sagas/game'
 
 /*
 *   Contstants 
@@ -52,7 +53,10 @@ export const reducer = (state = new MainEntity(), action: any) => {
 export function* bindSagas() {
 
     const sagasEvents = [
-        takeEvery(PREPARE_GAME_START_SOCKET_EVENT, prepareStartSaga)
+        takeEvery(PREPARE_GAME_START_SOCKET_EVENT, prepareStartSaga),
+        takeEvery(START_GAME_SOCKET_EVENT, startGameSocketSaga),
+
+        takeEvery(START_GAME_REQUEST, startGameEmitSaga),
     ]
 
     yield race({

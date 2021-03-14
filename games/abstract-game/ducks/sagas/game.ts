@@ -6,12 +6,18 @@ import { closeElement } from '../../../../ducks/modal/index'
 import { bindSocketEvents } from './bind-socket-events'
 import Toasts from '../../../../code/alerts/toast'
 
-export function* stopGameSuccess() {
-
-    
+export function* startGameEmitSaga() {
+    yield call(socketEmit, `${socketPrefix}/start-game`, {})
 }
 
-export function* reconnectGame(reconnectState: iReconnectGameState) {
+export function* startGameSocketSaga({ payload }: any) {
+
+    const { error } = payload
     
-    
+    if(error) {
+        return Toasts.messageToast(error)
+    }
+
+    yield put({ type: START_GAME_SUCCESS })
+    yield put(closeElement())
 }
