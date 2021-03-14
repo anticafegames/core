@@ -101,8 +101,8 @@ export const connectedRoomSelector = createSelector(stateSelector, state => !!st
 export const IAmOwnerSelector = createSelector(roomSelector, room => room && room.isOwner)
 
 export const debugParamsSeletor = createSelector(roomSelector, state => state && state.debugParams)
-export const isDebugSelector = createSelector(debugParamsSeletor, state => state && state.isDebug)
-export const withoutWebrtcSelector = createSelector(debugParamsSeletor, state => state && state.isDebug && state.withoutWebrtc)
+export const debugModeSelector = createSelector(debugParamsSeletor, state => state && state.debugMode)
+export const withoutWebRTCSelector = createSelector(debugParamsSeletor, state => state && state.debugMode && state.withoutWebRTC)
 
 /*
 *   Action Creaters

@@ -31,8 +31,8 @@ export class RegRoomEntity extends Record(defaultParams) {
 
 export const getDefaultFormParams = (isDeveloper: boolean): Partial<iCreateFormResult> => ({
     openRoom: isDeveloper,
-    isDebug: isDeveloper,
-    withoutWebrtc: isDeveloper
+    debugMode: isDeveloper,
+    withoutWebRTC: isDeveloper
 })
 
 export default (params: iCreateFormResult) => (new RegRoomEntity(params).toJS())

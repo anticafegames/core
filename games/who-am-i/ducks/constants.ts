@@ -27,3 +27,8 @@ export const SHOW_NAME_REQUEST = `${prefix}/SHOW_NAME_REQUEST`
 export const SHOW_NAME_SOCKET_EVENT = `${prefix}/SHOW_NAME_SOCKET_EVENT`
 export const SHOW_NAME_SUCCESS = `${prefix}/SHOW_NAME_SUCCESS`
 export const SHOW_MY_NAME_SUCCESS = `${prefix}/SHOW_MY_NAME_SUCCESS`
+
+export const RANDOM_NAME_REQUEST = `${prefix}/RANDOM_NAME_REQUEST`
+export const RANDOM_NAME_SOCKET_EVENT = `${prefix}/RANDOM_NAME_SOCKET_EVENT`
+export const RANDOM_NAME_SUCCESS = `${prefix}/RANDOM_NAME_SUCCESS`
+export const RANDOM_NAME_LOADING = `${prefix}/RANDOM_NAME_LOADING`

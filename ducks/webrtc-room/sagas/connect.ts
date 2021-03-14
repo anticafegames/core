@@ -12,7 +12,7 @@ import Auth from '../../../code/api/vk-api/vk-api-helper'
 import createLocalStreamSaga, { waitLocalStream, } from '../../webrtc/sagas/local-stream'
 import { querySelector, hashSelector, locationSelector, pathnameSelector } from '../../router'
 import { showGlobalPreloader, getHidePreloaderSagaKey, hidePreloader } from '../../global-preloader'
-import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector, withoutWebrtcSelector } from ".."
+import { ADD_ROOM_PEER, LEAVE_ROOM_PEER, LEAVE_FROM_ROOM_SUCCESS, ROOM_CONNECT_SOCKET_EVENT, ROOM_CONNECT_SUCCESS, ROOM_INFO_SOCKET_EVENT, roomUsersSelector, withoutWebRTCSelector } from ".."
 import Toasts from "../../../code/alerts/toast"
 import { iSocketAction } from "../../socket/entity/interface"
 import { iShortRoom } from "../../webrtc-rooms/entity/rooms-entity"
@@ -68,7 +68,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
 
         const { room, roomToken, game } = result
 
-        if (mode === 'knock') {
+        if (mode === 'knock' || mode === 'reconnect') {
 
             const localStream = yield call(createLocalStreamSaga)
 
@@ -84,16 +84,16 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
         const userId = yield select(userIdSelector)
         room.isOwner = userId === room.ownerId
 
-        if (room.status === 'game' && game) {
-            yield call(reconnectGame, game)
-        }
-
         yield put({
             type: ROOM_CONNECT_SUCCESS,
             payload: { room }
         })
 
-        const debugRoomWithoutWebrtc = yield select(withoutWebrtcSelector)
+        if (room.status === 'game' && game) {
+            yield call(reconnectGame, game)
+        }
+
+        const debugRoomWithoutWebrtc = yield select(withoutWebRTCSelector)
 
         if(!debugRoomWithoutWebrtc) {
 
@@ -155,7 +155,7 @@ export function* roomJoinSocketEventSaga({ payload }: any) {
         payload: { user }
     })
 
-    const debugRoomWithoutWebrtc = yield select(withoutWebrtcSelector)
+    const debugRoomWithoutWebrtc = yield select(withoutWebRTCSelector)
 
     if (debugRoomWithoutWebrtc) {
         yield createFakeConnectionSaga(id)
@@ -237,10 +237,6 @@ export function* checkReconnectRoom() {
     yield call(Auth.waitAuthentication, false, false)
     if (!(yield select(isAuthorizedSelector))) {
         return yield console.log('Ошибка аутентификации')
-    }
-
-    if (!(yield call(createLocalStreamSaga))) {
-        return yield error('Не смогли подключиться к камере')
     }
 
     yield call(waitBindSocket, ROOM_CONNECT_SOCKET_EVENT)

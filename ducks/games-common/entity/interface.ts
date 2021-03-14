@@ -1,11 +1,9 @@
-export type gameKey = 'whoAmI' 
-
+export type gameKey = 'whoAmI' | 'crocodile' | 'alias'
 export interface iReconnectGameState {
     gameKey: gameKey
     state: any
 }
-
-export interface iGame {
+export interface iGameDuck {
     canStartGame: any
     entity: any
     reducer: any

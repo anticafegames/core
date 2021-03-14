@@ -1,5 +1,5 @@
 import { iSocketAction } from '../../../../ducks/socket/entity/interface'
-import { socketPrefix, PREPARE_GAME_START_SOCKET_EVENT, SELECT_NAME_SOCKET_EVENT, START_GAME_SOCKET_EVENT, SHOW_NAME_SOCKET_EVENT } from '../constants'
+import { socketPrefix, PREPARE_GAME_START_SOCKET_EVENT, SELECT_NAME_SOCKET_EVENT, START_GAME_SOCKET_EVENT, SHOW_NAME_SOCKET_EVENT, RANDOM_NAME_SOCKET_EVENT } from '../constants'
 import { bindSocketEvents as bindEvents, getSagaKeyUnbindSocket } from '../../../../code/socket/bind-socket-events-helper'
 import { all, call, fork } from 'redux-saga/effects'
 
@@ -19,6 +19,10 @@ const socketActions: iSocketAction[] = [
     {
         socketKey: `${socketPrefix}/show-name`,
         sagaKey: SHOW_NAME_SOCKET_EVENT
+    },
+    {
+        socketKey: `${socketPrefix}/random-name`,
+        sagaKey: RANDOM_NAME_SOCKET_EVENT
     }
 ] 
 

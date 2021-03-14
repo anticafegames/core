@@ -27,7 +27,7 @@ export function* reconnectGame(reconnectState: iReconnectGameState) {
     
     const stateResponce: iReconnectStateResponce = reconnectState.state
     const state: iReconnectState = yield call(convertReconnectStateResponce, stateResponce)
-
+    
     yield put({
         type: RECONNECT_GAME_SUCCESS,
         payload: { state }
@@ -36,6 +36,4 @@ export function* reconnectGame(reconnectState: iReconnectGameState) {
     if(state.gameState === 'prepare') {
         yield put(WhoAmIModals.showSelectNameModal())
     }
-
-    return 
 }

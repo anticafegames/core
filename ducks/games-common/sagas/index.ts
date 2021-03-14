@@ -1,13 +1,13 @@
-import { gameKey, iGame } from '../entity/interface'
-import games from '../../../games/who-am-i/games'
+import { gameKey, iGameDuck } from '../entity/interface'
+import Games from '../../../games/games'
 
-export const getGame = (gameKey: gameKey): iGame => {
+export const getGame = (gameKey: gameKey): iGameDuck => {
 
-    const game = games[gameKey]
+    const game = Games.getGame(gameKey)
 
     if(!game) {
         throw new Error(`Неизвестная игра: ${gameKey}`)
     }
 
-    return game
+    return game.duck
 } 

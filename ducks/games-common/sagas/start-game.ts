@@ -1,7 +1,7 @@
-import { call, put, select, fork } from 'redux-saga/effects'
+import { call, put, select, fork, spawn } from 'redux-saga/effects'
 
 import { gameKey, iReconnectGameState } from '../entity/interface'
-import { WAIT_READY_START, USER_IS_READY, WAIT_READY_STOP, gameKeySelector, STOP_GAME_SUCCESS, RECONNECT_GAME, STOP_GAME_SAGAS, CREATE_GAME_ENTITY } from '..'
+import { WAIT_READY_START, USER_IS_READY, WAIT_READY_STOP, gameKeySelector, STOP_GAME_SUCCESS, RECONNECT_GAME, STOP_GAME_SAGAS, CREATE_GAME_ENTITY, gameSelector } from '..'
 import { iRoomPeer } from '../../webrtc-room/entity/room-peer-entity'
 import { roomUsersSelector, CHANGE_ROOM_STATUS } from '../../webrtc-room'
 import Modals from '../../../../core/code/modals'
@@ -131,7 +131,7 @@ export function* bindGame(gameKey: gameKey) {
     })
 
     yield fork(game.bindSagas)
-    yield call(game.bindSocketEvents)
+    yield fork(game.bindSocketEvents)
 }
 
 export function* unbindGame(gameKey: gameKey) {
@@ -169,16 +169,11 @@ export function* stopGameSaga() {
 
 export function* reconnectGame(state: iReconnectGameState) {
 
-    const game = getGame(state.gameKey)
+    const game = yield call(getGame, state.gameKey)
 
     if (!game.reconnectGame) return null
 
-    yield fork(bindGame, state.gameKey) 
+    yield spawn(bindGame, state.gameKey) 
     yield call(game.reconnectGame, state)
-
-    yield put({
-        type: RECONNECT_GAME,
-        payload: { state }
-    })
 }
 

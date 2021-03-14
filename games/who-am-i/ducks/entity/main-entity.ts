@@ -6,13 +6,17 @@ import { iGameState, iReconnectState } from './interface'
 export interface iMainEntity {
     gameUsers: List<GameUserEntity> | iGameUser[]
     gameState: iGameState
+    randomName: string
     fillNameLoading: boolean
+    randomNameLoading: boolean
 }
 
 const defaultParams: iMainEntity = {
     gameUsers: List([]),
     gameState: 'undefined',
-    fillNameLoading: false
+    randomName: '',
+    fillNameLoading: false,
+    randomNameLoading: false
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -63,6 +67,12 @@ export default class MainEntity extends Record(defaultParams) {
             .set('fillNameLoading', false) as this
     }
 
+    selectRandomName(name: string) {
+        return this
+            .set('randomName', name) 
+            .set('randomNameLoading', false) as this
+    }
+
     showMyName(name: string) {
 
         const users = this.getGameUsers()
@@ -85,6 +95,10 @@ export default class MainEntity extends Record(defaultParams) {
 
     selectNameLoading(state: boolean) {
         return this.set('fillNameLoading', state) as this
+    }
+
+    randomNameLoading(state: boolean) {
+        return this.set('randomNameLoading', state) as this
     }
 
     getGameUsers() {

@@ -52,12 +52,6 @@ export default class MainEntity extends Record(defaultParams) {
             .updateIn(['game'], (game: GameEntity) => game.stopGame()) as this
     }
 
-    reconnect(state: iReconnectGameState, game: any) {
-        return this
-            .set('gameKey', undefined)
-            .set('game', undefined) as this
-    }
-
     gameReducer(action: any) {
         return this
             .updateIn(['game'], (game: GameEntity) => game.reducer(action)) as this
