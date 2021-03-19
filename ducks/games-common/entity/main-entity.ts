@@ -68,4 +68,8 @@ export default class MainEntity extends Record(defaultParams) {
     get gameEntity() {
         return this.get('game') as GameEntity
     }
+
+    getobject(): iMainEntity {
+        return this as any
+    }
 }

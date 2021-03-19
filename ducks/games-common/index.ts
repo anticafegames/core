@@ -10,7 +10,6 @@ import { ROOM_CONNECT_REQUEST } from '../webrtc-room'
 import MainEntity, { iMainEntity } from './entity/main-entity'
 import { gameKey } from './entity/interface'
 import { prepareGameSaga, readyStartSaga, iReadySaga, cancelPrepareGameSocketEventSaga, cancelPrepareGameSaga, endPrepareGameSaga, stopGameEmitSaga, stopGameSaga } from './sagas/start-game'
-import { addGameDataSaga } from './sagas/add-game-data'
 
 /*
 *   Contstants 
@@ -47,8 +46,6 @@ export const RECONNECT_GAME = `${prefix}/RECONNECT_GAME`
 
 export const CREATE_GAME_ENTITY = `${prefix}/CREATE_GAME_ENTITY`
 export const STOP_GAME_SAGAS = `${prefix}/STOP_GAME_SAGAS`
-
-export const ADD_GAME_DATA_REQUEST = `${prefix}/ADD_GAME_DATA_REQUEST`
 
 /*
 *   Reducer
@@ -127,13 +124,6 @@ export function cancelPrepareGame() {
     return { type: CANCEL_PREPARE_GAME_REQUEST }
 }
 
-export function addGameData(gameKey: gameKey, data: any) {
-    return {
-        type: ADD_GAME_DATA_REQUEST,
-        payload: { gameKey, data }
-    }
-}
-
 /*
 *   Sagas
 */
@@ -172,8 +162,6 @@ export function* saga() {
         takeEvery(CANCEL_PREPARE_GAME_REQUEST, cancelPrepareGameSaga),
         takeEvery(READY_START_SOCKET_EVENT, readyStartSaga),
         takeEvery(I_READY_REQUEST, iReadySaga),
-        takeEvery(STOP_GAME_REQUEST, stopGameEmitSaga),
-
-        takeEvery(ADD_GAME_DATA_REQUEST, addGameDataSaga)
+        takeEvery(STOP_GAME_REQUEST, stopGameEmitSaga)
     ])
 }
