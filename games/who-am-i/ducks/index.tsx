@@ -92,7 +92,7 @@ export const reducer = (state = new MainEntity(), action: any) => {
 export const gameUsersSelector = createSelector(gameSelector, state => ((state.gameUsers as List<any>).toJS() as iGameUser[]).sort(sortBuyOrdernum))
 export const randomNameSelector = createSelector(gameSelector, state => state.randomName)
 export const fillNameLoadingSelector = createSelector(gameSelector, state => state.fillNameLoading)
-export const randomNameLoadingSelector = createSelector(gameSelector, state => state.randomNameLoading)
+export const randomNameLoadingSelector = createSelector(gameSelector, state => state.randomNameloading)
 export const gameStateSelector = createSelector(gameSelector, state => state.gameState)
 
 /*

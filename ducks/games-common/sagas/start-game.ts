@@ -142,10 +142,17 @@ export function* unbindGame(gameKey: gameKey) {
     yield put({ type: STOP_GAME_SAGAS })
 }
 
-export function* endPrepareGameSaga() {
+export function* endPrepareGameSaga({ payload }: any) {
+
+    const { status } = payload
 
     yield put(closeElement())
     yield put({ type: WAIT_READY_STOP })
+
+    yield put({
+        type: CHANGE_ROOM_STATUS,
+        payload: { status }
+    })
 }
 
 export function* stopGameSaga() {

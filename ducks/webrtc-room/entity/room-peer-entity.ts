@@ -34,4 +34,8 @@ export default class RoomPeerEntity extends Record(defaultParams) {
     get id () {
         return this.get('id') 
     }
+
+    toobject() {
+        return this.toJS() as iRoomPeer
+    }
 }

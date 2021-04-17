@@ -1,16 +1,17 @@
 import { List, Record } from "immutable"
 import React from 'react'
 
+import { guid } from "../../../../code/common/hash"
+
+import ModalEntity from './modal-entity'
 import ParamsEntity, { iModalParams } from './modal-params-entity'
 
 export interface iMainEntity {
-    render?: (closeModal: () => void) => JSX.Element
-    params?: ParamsEntity | iModalParams
+    modalList: List<ModalEntity>
 }
 
 const defaultParams: iMainEntity = {
-    render: undefined,
-    params: undefined
+    modalList: List()
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -19,11 +20,22 @@ export default class MainEntity extends Record(defaultParams) {
         params ? super(params) : super()
     }
 
-    showElement(element: JSX.Element, params?: iModalParams) {
-        return this.set('render', element).set('params', new ParamsEntity(params)) as this
+    showElement(render: (closeModal: () => void) => JSX.Element, params?: iModalParams) {
+        return this.update('modalList', (list: List<ModalEntity>) => list.merge(list.unshift(new ModalEntity({ key: guid(), render, params })))) as this
     }
 
     closeElement() {
-        return this.set('render', undefined).set('params', undefined) as this
+        return this.update('modalList', (list: List<ModalEntity>) => {
+            if(!list.size) return list
+            return list.deleteIn([0])
+        }) as this
+    }
+
+    get currentModal() {
+
+        const list = this.get('modalList') as List<ModalEntity>
+        const modal = list.get(0)
+
+        return modal && modal.toobject()
     }
 }

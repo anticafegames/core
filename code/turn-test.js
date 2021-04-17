@@ -1,6 +1,6 @@
 //Нужно скопировать в консоль браузера, для проверки 
 
-// service coturn restart
+// sudo service coturn restart
 //  netstat -npta
 //  sudo service kurento-media-server start
 

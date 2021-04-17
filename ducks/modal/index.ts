@@ -39,10 +39,9 @@ export default function reducer(state = new MainEntity(), action: any) {
 *   Selectors
 */
 
-export const stateSelector = (state: any) => state[moduleName] as iMainEntity
+export const stateSelector = (state: any) => state[moduleName] as MainEntity
 
-export const renderSelector = createSelector(stateSelector, state => state.render)
-export const paramsSelector = createSelector(stateSelector, state => state.params as iModalParams | undefined)
+export const currentModalSelector = createSelector(stateSelector, state => state.currentModal)
 
 /*
 *   Action Creaters

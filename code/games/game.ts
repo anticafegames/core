@@ -1,5 +1,6 @@
 import { gameKey, iGameDuck } from '../../ducks/games-common/entity/interface'
 import { GameManual } from './game-manual'
+import GameModalWindows from './game-modal-window'
 
 export default class Game {
 
@@ -7,7 +8,8 @@ export default class Game {
     gameName!: string
 
     duck!: iGameDuck
-
+    modalWindows: GameModalWindows = new GameModalWindows()
+    
     //DI
     _manual!: GameManual
     //DI

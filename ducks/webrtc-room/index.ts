@@ -93,6 +93,7 @@ export const stateSelector = (state: any) => state[moduleName] as iMainEntity
 export const roomSelector = createSelector(stateSelector, state => state.room as iRoom)
 export const roomUsersSelector = createSelector(roomSelector, room => ((room && (room.users as List<RoomPeerEntity>).toJS()) || []) as iRoomPeer[]) 
 export const roomUserEntitiesSelector = createSelector(roomSelector, room => (room && (room.users as List<RoomPeerEntity>)) || [])
+export const roomUsersCountSelector = createSelector(roomUsersSelector, users => users.length)
 
 export const roomIdSelector = createSelector(roomSelector, state => state && state.id)
 export const nameSelector = createSelector(roomSelector, state => state.name)

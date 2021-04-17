@@ -5,6 +5,9 @@ import { socketEmit } from '../../../../code/socket/socket-emit'
 import { closeElement } from '../../../../ducks/modal/index'
 import { bindSocketEvents } from './bind-socket-events'
 import Toasts from '../../../../code/alerts/toast'
+import { iReconnectStateResponce } from '../entity/interface'
+import { convertReconnectStateResponce } from '../entity/converter'
+import { showCrocodileModal } from '../../modal-windows'
 
 export function* stopGameSuccess() {
 
@@ -13,5 +16,15 @@ export function* stopGameSuccess() {
 
 export function* reconnectGame(reconnectState: iReconnectGameState) {
     
+    const stateResponse: iReconnectStateResponce = reconnectState.state
+    const state = yield call(convertReconnectStateResponce, stateResponse)
     
+    yield put({
+        type: RECONNECT_GAME_SUCCESS,
+        payload: state
+    })
+    
+    if(state.state === 'prepare') {
+        yield put(showCrocodileModal('PrepareGame'))
+    }
 }

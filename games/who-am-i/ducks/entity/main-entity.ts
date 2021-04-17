@@ -8,7 +8,7 @@ export interface iMainEntity {
     gameState: iGameState
     randomName: string
     fillNameLoading: boolean
-    randomNameLoading: boolean
+    randomNameloading: boolean
 }
 
 const defaultParams: iMainEntity = {
@@ -16,7 +16,7 @@ const defaultParams: iMainEntity = {
     gameState: 'undefined',
     randomName: '',
     fillNameLoading: false,
-    randomNameLoading: false
+    randomNameloading: false
 }
 
 export default class MainEntity extends Record(defaultParams) {
@@ -70,7 +70,7 @@ export default class MainEntity extends Record(defaultParams) {
     selectRandomName(name: string) {
         return this
             .set('randomName', name) 
-            .set('randomNameLoading', false) as this
+            .set('randomNameloading', false) as this
     }
 
     showMyName(name: string) {
@@ -98,7 +98,7 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     randomNameLoading(state: boolean) {
-        return this.set('randomNameLoading', state) as this
+        return this.set('randomNameloading', state) as this
     }
 
     getGameUsers() {

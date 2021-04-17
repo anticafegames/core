@@ -4,7 +4,7 @@ import { iReconnectGameState } from '../../../../ducks/games-common/entity/inter
 import { iReconnectState, iReconnectStateResponce, iGameState } from '../entity/interface'
 import { iGameUser } from '../entity/game-user-entity'
 import { convertResponceGameUser, convertReconnectStateResponce } from '../entity/converter'
-import WhoAmIModals from '../../code/modals'
+import { showWhoAmIModal } from '../../modal-windows'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import { closeElement } from '../../../../ducks/modal/index'
 import { bindSocketEvents } from './bind-socket-events'
@@ -34,6 +34,6 @@ export function* reconnectGame(reconnectState: iReconnectGameState) {
     })
     
     if(state.gameState === 'prepare') {
-        yield put(WhoAmIModals.showSelectNameModal())
+        yield put(showWhoAmIModal('SelectNameModal'))
     }
 }
