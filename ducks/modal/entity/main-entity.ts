@@ -1,5 +1,5 @@
-import { List, Record } from "immutable"
 import React from 'react'
+import { List, Record } from 'immutable'
 
 import { guid } from "../../../../code/common/hash"
 

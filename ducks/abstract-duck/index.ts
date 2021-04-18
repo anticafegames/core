@@ -17,6 +17,8 @@ export const socketPrefix = 'name'
 
 const prefix = `${appName}/${moduleName}`
 
+export const DEFAULT_CONST = `${prefix}/DEFAULT_CONST`
+
 /*
 *   Reducer
 */
@@ -50,12 +52,16 @@ export const stateSelector = (state: any) => state[moduleName] as MainEntity
 *   Sagas
 */
 
-export const socketActions: iSocketAction[] = [
+/*export const socketActions: iSocketAction[] = [
 
-]
+]*/
+
+function* defaultSaga() {
+    return yield true
+}
 
 export function* saga() {
     yield all([
-        bindSocketEvents(socketActions)
+        takeEvery(DEFAULT_CONST, defaultSaga)
     ])
 }
