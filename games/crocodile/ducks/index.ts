@@ -17,6 +17,8 @@ import { iSettings } from './entity/settings-entity'
 import { iSettingsParams } from './entity/settings-params-entity'
 import { startRoundEmitSaga, startRoundSocketEvent } from './sagas/round'
 import RoundEntity, { iRound } from './entity/round-entity'
+import { iGameState } from './entity/interface'
+import { iGameUser } from '../../who-am-i/ducks/entity/game-user-entity'
 
 /*
 *   Contstants 
@@ -33,8 +35,12 @@ export const reducer = (state = new MainEntity(), action: any) => {
 
     switch (type) {
 
+        case Contstants.PREPARE_GAME_START_SUCCESS:
+        case Contstants.START_GAME_SUCCESS:
+            return state.updateGameData(payload)
+
         case Contstants.RECONNECT_GAME_SUCCESS:
-            return state.reconnectGame(payload.state, payload.settings, payload.teams)
+            return state.reconnectGame(payload.state, payload)
 
         case Contstants.CHANGE_TEAM_REQUEST:
         case Contstants.CHANGE_TEAM_SOCKET_EVENT:
@@ -43,27 +49,30 @@ export const reducer = (state = new MainEntity(), action: any) => {
         case Contstants.CHANGE_SETTINGS_SUCCESS:
             return state.updateSettings(settings => settings.setParams(payload.settings))
 
-        case Contstants.DELETE_TEAM_SUCCESS: 
+        case Contstants.DELETE_TEAM_SUCCESS:
             return state
                 .updateTeamById(payload.toTeam, team => team.addUsers(payload.users))
                 .deleteTeam(payload.teamId)
 
-        case Contstants.ADD_TEAM_SUCCESS: 
+        case Contstants.ADD_TEAM_SUCCESS:
             return state.addTeam(payload.team)
 
         case Contstants.ADD_TEAM_LOADING:
             return state.addTeamLoading(payload.loading)
 
-        case Contstants.LOAD_PACKS_SUCCESS: 
+        case Contstants.LOAD_PACKS_SUCCESS:
             return state.updateSettings(settings => settings.setPacks(payload))
+
+        case Contstants.SET_ROUND_DATA:
+            return state.updateRound(round => round.setRoundData(payload))
 
         case Contstants.CHANGE_TIMER:
             return state.updateRound(round => round.setTimer(payload.timer))
 
-        case Contstants.LOAD_PACKS_LOADING: 
+        case Contstants.LOAD_PACKS_LOADING:
             return state.updateSettings(settings => settings.setPacksLoading(payload.loading))
 
-        case Contstants.TEAM_LOADING: 
+        case Contstants.TEAM_LOADING:
             return state.updateTeamById(payload.teamId, team => team.teamLoading(payload.loading))
 
         default:
@@ -76,6 +85,8 @@ export const reducer = (state = new MainEntity(), action: any) => {
 *   Selectors
 */
 
+
+export const gameStateSelector = createSelector(gameSelector, (state) => state.state as iGameState)
 export const teamsSelector = createSelector(gameSelector, (state) => state.teams.toJS() as iTeam[])
 export const addTeamLoadingSelector = createSelector(gameSelector, (state) => state.addTeamloading)
 export const settingsSelector = createSelector(gameSelector, (state) => state.settings as iSettings)
@@ -86,6 +97,43 @@ export const teamByIdSelector = (teamId: string) => createSelector(teamsSelector
 export const roundSelector = createSelector(gameSelector, (state) => state.round as iRound)
 export const timerSelector = createSelector(roundSelector, (state) => state.timer)
 
+export const hostTeamSelector = createSelector(gameSelector, state => state.round && state.round.hostTeam && state.teams.find((team: iTeam) => team.name === state.round.hostTeam) as iTeam)
+export const hostUserSelector = createSelector(gameSelector, state => {
+
+    if (state.round && state.round.hostTeam) {
+
+        const hostTeam = state.teams.find((team: iTeam) => team.name === state.round.hostTeam) as iTeam
+        const hostUser = hostTeam && hostTeam.users.find(user => user.userId === state.round.hostUserId)
+
+        return hostUser
+    }
+
+    return null
+})
+
+export const otherHostUsersSelector = createSelector(gameSelector, state => {
+
+    if (state.round && state.round.hostTeam) {
+
+        const hostTeam = state.teams.find((team: iTeam) => team.name === state.round.hostTeam) as iTeam
+        const hostUser = hostTeam && hostTeam.users.filter(user => user.userId !== state.round.hostUserId)
+
+        return hostUser
+    }
+
+    return null
+})
+
+export const nothostTeamUsersSelector = createSelector(gameSelector, state => {
+
+    const hostTeam = state.round && state.round.hostTeam
+    const nothostTeams = state.teams.filter((team: iTeam) => team.name !== hostTeam) as iTeam[]
+
+    return nothostTeams.reduce((current: iGameUser[], team) => {
+        current.push(...(team.users as iGameUser[]))
+        return current
+    }, [])
+})
 
 /*
 *   Action Creaters

@@ -42,3 +42,12 @@ export interface iTeamRequest {
     name: string,
     users: string[]
 }
+
+export interface iHostTeamResponce {
+    teamId: string
+    hostUserId: number
+}
+
+export interface iHostUserData {
+    words: []
+}

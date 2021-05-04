@@ -1,11 +1,12 @@
 import { put, call, fork, select } from 'redux-saga/effects'
-import { STOP_GAME_SUCCESS, RECONNECT_GAME_SUCCESS, socketPrefix, START_GAME_SUCCESS, CHANGE_TIMER } from '../constants'
+import { STOP_GAME_SUCCESS, RECONNECT_GAME_SUCCESS, socketPrefix, START_GAME_SUCCESS, CHANGE_TIMER, SET_ROUND_DATA } from '../constants'
 import { iReconnectGameState } from '../../../../ducks/games-common/entity/interface'
 import { socketEmit } from '../../../../code/socket/socket-emit'
 import { closeElement } from '../../../../ducks/modal/index'
 import { bindSocketEvents } from './bind-socket-events'
 import Toasts from '../../../../code/alerts/toast'
-import { settingsToRequest } from '../entity/converter'
+import { convertResponceTeams, settingsToRequest } from '../entity/converter'
+import { settings } from 'cluster'
 
 export function* startGameEmitSaga() {
     const data = yield call(settingsToRequest)
@@ -14,13 +15,18 @@ export function* startGameEmitSaga() {
 
 export function* startGameSocketSaga({ payload }: any) {
 
-    const { error } = payload
+    const { error, result } = payload
     
     if(error) {
         return Toasts.messageToast(error)
     }
-    
-    yield put({ type: CHANGE_TIMER, payload: { timer: 60 } })
-    yield put({ type: START_GAME_SUCCESS })
+
+    const { gameData, hostTeam, hostUserData } = result
+    let { state, settings, teams } = gameData
+
+    teams = yield call(convertResponceTeams, teams)
+
+    yield put({ type: START_GAME_SUCCESS, payload: { state, settings, teams } })
+    yield put({ type: SET_ROUND_DATA, payload: { hostTeam, hostUserData } })
     yield put(closeElement())
 }

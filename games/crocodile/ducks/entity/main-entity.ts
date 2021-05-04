@@ -1,10 +1,11 @@
 import { List, Record } from 'immutable'
 import { createDebuggerStatement } from 'typescript'
-import { iGameState } from './interface'
+import { iGameState, iHostTeamResponce } from './interface'
 import TeamEntity, { iTeam } from './team-entity'
 import SettingsEntity from './settings-entity'
 import { iSettingsParams } from './settings-params-entity'
 import RoundEntity, { iRound } from './round-entity'
+import { roundSelector } from '..'
 
 export interface iMainEntity {
     state: iGameState
@@ -33,21 +34,37 @@ export default class MainEntity extends Record(defaultParams) {
         params ? super(params) : super()
     }
 
-    reconnectGame(state: iGameState, settings: iSettingsParams, teams: iTeam[]) {
+    reconnectGame(state: iGameState, payload: any) {
 
-        return this
-            .updateSettings(entity => entity.setParams(settings))
-            .set('state', state)
-            .set('teams', List(teams.map(team => new TeamEntity(team)))) as this
+        switch (state) {
+
+            case 'prepare':
+                return this
+                    .updateSettings(entity => entity.setParams(payload.settings))
+                    .set('state', state)
+                    .set('teams', List(payload.teams.map((team: iTeam) => new TeamEntity(team)))) as this
+
+            case 'game':
+                return this
+                    .updateSettings(entity => entity.setParams(payload.settings))
+
+                    .updateRound(round => round
+                        .setTimer(payload.settings.timer)
+                        .setHostTeam(payload.hostTeam)
+                        .setHostUserData(payload.hostUserData))
+
+                    .set('state', state)
+                    .set('teams', List(payload.teams.map((team: iTeam) => new TeamEntity(team)))) as this
+        }
     }
 
     changeTeam(userId: string, from: string, to: string, index: number) {
 
         return this.updateIn(['teams'], (teams: List<TeamEntity>) => {
-            
+
             const fromIndex = this.indexTeamById(from)
             const toIndex = this.indexTeamById(to)
-            if(fromIndex < 0 || toIndex < 0) return teams
+            if (fromIndex < 0 || toIndex < 0) return teams
 
             const user = this.teamById(from).userById(userId)
 
@@ -70,9 +87,9 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     updateTeamById(teamId: string, action: (team: TeamEntity) => TeamEntity) {
-        
+
         const teamIndex = this.indexTeamById(teamId)
-        if(teamIndex == -1) return this
+        if (teamIndex == -1) return this
 
         return this.updateIn(['teams', teamIndex], action) as this
     }
@@ -81,10 +98,18 @@ export default class MainEntity extends Record(defaultParams) {
         return this.updateIn(['round'], action) as this
     }
 
+    updateGameData(gameData: any) {
+        return this
+            .updateSettings(entity => entity.setParams(gameData.settings))
+            .updateRound(round => round.setTimer(gameData.settings.timer))
+            .set('state', gameData.state)
+            .set('teams', List(gameData.teams.map((team: iTeam) => new TeamEntity(team)))) as this
+    }
+
     deleteTeam(teamId: string) {
 
         const index = this.indexTeamById(teamId)
-        if(index < 0) return this
+        if (index < 0) return this
 
         return this.deleteIn(['teams', index]) as this
     }
@@ -102,7 +127,7 @@ export default class MainEntity extends Record(defaultParams) {
     }
 
     teamByIndex(index: number) {
-        return this.getIn([ 'teams', index ]) as TeamEntity
+        return this.getIn(['teams', index]) as TeamEntity
     }
 
     get teams() {

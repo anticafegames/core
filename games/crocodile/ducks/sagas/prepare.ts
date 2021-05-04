@@ -2,15 +2,21 @@ import { call, put, select } from 'redux-saga/effects'
 
 import { socketEmit, socketEmitAndWaitData } from '../../../../code/socket/socket-emit'
 import Toasts from '../../../../code/alerts/toast'
-import { ADD_TEAM_LOADING, ADD_TEAM_SUCCESS, LOAD_PACKS_LOADING, LOAD_PACKS_SOCKET_EVENT, LOAD_PACKS_SUCCESS, CHANGE_SETTINGS_SUCCESS, TEAM_LOADING, socketPrefix, DELETE_TEAM_SUCCESS } from '../constants'
+import { ADD_TEAM_LOADING, ADD_TEAM_SUCCESS, LOAD_PACKS_LOADING, LOAD_PACKS_SOCKET_EVENT, LOAD_PACKS_SUCCESS, CHANGE_SETTINGS_SUCCESS, TEAM_LOADING, socketPrefix, DELETE_TEAM_SUCCESS, PREPARE_GAME_START_SUCCESS } from '../constants'
 import { packsSelector, teamByIdSelector } from '..'
 import { iSettingsParams } from '../entity/settings-params-entity'
 import { iDeleteTeamResponce } from '../entity/interface'
 import { iTeam } from '../entity/team-entity'
+import { convertResponceTeams } from '../entity/converter'
+import { showCrocodileModal } from '../../modal-windows'
 
 export function* prepareStartSaga({ payload }: any) {
 
-    return true
+    let { state, settings, teams } = payload
+    teams = yield call(convertResponceTeams, teams)
+    
+    yield put({ type: PREPARE_GAME_START_SUCCESS, payload: { state, settings, teams } })
+    yield put(showCrocodileModal('PrepareGame'))
 }
 
 export function* changeTeamEmitSaga({ payload }: any) {

@@ -50,6 +50,5 @@ export const START_ROUND_SUCCESS = `${prefix}/START_ROUND_SUCCESS`
 
 export const CHANGE_TIMER = `${prefix}/CHANGE_TIMER`
  
-
-
+export const SET_ROUND_DATA = `${prefix}/SET_ROUND_DATA`
 
