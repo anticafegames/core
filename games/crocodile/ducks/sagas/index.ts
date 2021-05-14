@@ -14,7 +14,7 @@ export function* stopGameSuccess() {
     
 }
 
-export function* reconnectGame(reconnectState: iReconnectGameState) {
+export function* reconnectGame(reconnectState: iReconnectGameState): any {
     
     const stateResponse: iReconnectStateResponce = reconnectState.state
     const state = yield call(convertReconnectStateResponce, stateResponse)

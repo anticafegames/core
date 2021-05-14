@@ -9,12 +9,12 @@ import { appName } from "../../../config/app-config"
 import Track from '../../../code/webrtc/track'
 
 
-export function* listenOnTrack(connection: RTCPeerConnection, userId: string) {
+export function* listenOnTrack(connection: RTCPeerConnection, userId: string): any {
     const channel = yield eventChannel((emit: any) => Track.listenOnTrack(connection, emit))
     yield fork(listen, channel, userId)
 }
 
-export function* listen(channel: any, userId: string) {
+export function* listen(channel: any, userId: string): any {
 
     while (true) {
 

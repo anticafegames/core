@@ -8,22 +8,22 @@ import { refreshAccessToken, authorizationHeader } from './auth'
 
 export default class Api {
 
-    static GET = function* (url: string, data: any, options?: any) {
+    static GET = function* (url: string, data: any, options?: any): any {
         const method = 'GET'
         return yield Api.RequestSaga({ url, method, data, options })
     }
 
-    static POST = function* (url: string, data: any, options?: any) {
+    static POST = function* (url: string, data: any, options?: any): any {
         const method = 'POST'
         return yield Api.RequestSaga({ url, method, data, options })
     }
 
-    static DELETE = function* (url: string, data: any, options?: any) {
+    static DELETE = function* (url: string, data: any, options?: any): any {
         const method = 'DELETE'
         return yield Api.RequestSaga({ url, method, data, options })
     }
 
-    static JSONP = function* (url: string, params: any, options?: any) {
+    static JSONP = function* (url: string, params: any, options?: any): any {
 
         url = Api.setPatamsToUrl(url, params)
         
@@ -34,7 +34,7 @@ export default class Api {
         })
     }
 
-    static RequestSaga = function* (params: any): Generator<any, any, any> {
+    static RequestSaga = function* (params: any): any {
         
         const { url, method, data, options } = params
 
@@ -59,7 +59,7 @@ export default class Api {
         }
     }
 
-    static GetConfig = function* (params: any) {
+    static GetConfig = function* (params: any): any {
 
         let config = yield call(Api.GetHeader, params)
 
@@ -75,7 +75,7 @@ export default class Api {
         return config
     }
 
-    static GetHeader = function* (params: any) {
+    static GetHeader = function* (params: any): any {
         
         let config = {}
 

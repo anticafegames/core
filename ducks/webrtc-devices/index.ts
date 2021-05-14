@@ -167,7 +167,7 @@ export function* volumeOffSettingsActionSaga({ payload }: any) {
     })
 }
 
-export function* loadSettingsSaga() {
+export function* loadSettingsSaga(): any {
 
     try {
 
@@ -216,7 +216,7 @@ export function* saveChangesAndClearSaga() {
     })
 }
 
-export function* changeDevicesSaga({ payload }: any) {
+export function* changeDevicesSaga({ payload }: any): any {
 
     try {
         const kind: MediaDeviceKind = payload.kind

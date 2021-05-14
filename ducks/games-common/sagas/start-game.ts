@@ -17,7 +17,7 @@ import { getGame } from '.'
 * Владелец
 */
 
-export function* prepareGameSaga({ payload }: any) {
+export function* prepareGameSaga({ payload }: any): any {
 
     const { gameKey } = payload
 
@@ -28,7 +28,7 @@ export function* prepareGameSaga({ payload }: any) {
     yield checkReadyStart(gameKey)
 }
 
-export function* canStartGame(gameKey: gameKey) {
+export function* canStartGame(gameKey: gameKey): any {
     const game = getGame(gameKey)
     return yield call(game.canStartGame)
 }
@@ -103,7 +103,7 @@ export function* cancelPrepareGameSaga() {
 * Общие
 */
 
-export function* cancelPrepareGameSocketEventSaga() {
+export function* cancelPrepareGameSocketEventSaga(): any {
 
     const gameKey = yield select(gameKeySelector)
 
@@ -155,7 +155,7 @@ export function* endPrepareGameSaga({ payload }: any) {
     })
 }
 
-export function* stopGameSaga() {
+export function* stopGameSaga(): any {
 
     const gameKey = yield select(gameKeySelector)
 
@@ -174,7 +174,7 @@ export function* stopGameSaga() {
     yield call(game.stopGame)
 }
 
-export function* reconnectGame(state: iReconnectGameState) {
+export function* reconnectGame(state: iReconnectGameState): any {
 
     const game = yield call(getGame, state.gameKey)
 

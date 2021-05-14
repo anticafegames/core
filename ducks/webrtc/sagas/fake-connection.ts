@@ -5,7 +5,7 @@ import { roomUsersSelector } from '../../webrtc-room'
 import { iRoomPeer } from '../../webrtc-room/entity/room-peer-entity'
 import { iPeersConnection } from '../entity/peer-connection-entity'
 
-export function* createFakeConnectionSaga (userId: string) {
+export function* createFakeConnectionSaga (userId: string): any {
 
     const localStream = yield select(localStreamSelector)
 

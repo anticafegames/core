@@ -3,11 +3,11 @@ import { take, fork, race, put, call } from "redux-saga/effects"
 import { infoMessage } from "../messages"
 
 
-export function* waitCallback(subscribe: (emit: any) => void) {
+export function* waitCallback(subscribe: (emit: any) => void): any {
     return yield new Promise((resolve: any) => subscribe(resolve))
 }
 
-export function* listenEvent(subcribe: (emit: any) => () => void, eventSagaKey: string, unbindSagaKey: string) {
+export function* listenEvent(subcribe: (emit: any) => () => void, eventSagaKey: string, unbindSagaKey: string): any {
     infoMessage(`Привязались к событию ${unbindSagaKey}`)
     const channel = yield eventChannel(subcribe)
     yield fork(listenChannel, channel, eventSagaKey, unbindSagaKey)
@@ -38,7 +38,7 @@ function* listenChannel(channel: any, eventSagaKey: string, unbindSagaKey: strin
 }
 
 export const errorSagaKey = (sagaKey: string) => `${sagaKey}/ERROR`
-export const waitSuccess = function* (sagaKey: string) {
+export const waitSuccess = function* (sagaKey: string): any {
 
     const result = yield race({
         success: take(sagaKey),

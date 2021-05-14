@@ -7,7 +7,7 @@ import VKApi from "../../../code/api/vk-api/vk-api"
 
 import CustomDialogs from '../../../../core/code/alerts/custom-dialogs'
 
-export function* changeOwnerIdSaga({ payload }: any) {
+export function* changeOwnerIdSaga({ payload }: any): any {
 
     const { ownerId } = payload
 

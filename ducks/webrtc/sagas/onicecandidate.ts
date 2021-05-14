@@ -5,7 +5,7 @@ import { todo, infoMessage, errorMessage } from "../../../code/messages"
 import { getSocketResult, webrtcSocketEmit } from "../../../code/webrtc"
 import { appName } from "../../../config/app-config"
 
-export default function* listenOnIceCandidate(connection: RTCPeerConnection, userId: string) {
+export default function* listenOnIceCandidate(connection: RTCPeerConnection, userId: string): any {
 
     const channel = yield eventChannel((emit: any) => {
         connection.onicecandidate = (event: RTCPeerConnectionIceEvent) => emit(event)
@@ -17,7 +17,7 @@ export default function* listenOnIceCandidate(connection: RTCPeerConnection, use
     yield fork(listen, channel, userId)
 }
 
-export function* listen(channel: any, userId: string) {
+export function* listen(channel: any, userId: string): any {
 
     while (true) {
 

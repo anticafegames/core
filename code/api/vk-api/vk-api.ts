@@ -45,7 +45,7 @@ export default class VKApi {
         return null
     }
 
-    static loadUserEntity = function* (userId: number) {
+    static loadUserEntity = function* (userId: number): any {
 
         try {
 
@@ -68,7 +68,7 @@ export default class VKApi {
         return null
     }
 
-    static loadRoomPeers = function* (usersSocketResponse: iPeerRoomSocketResponse[]) {
+    static loadRoomPeers = function* (usersSocketResponse: iPeerRoomSocketResponse[]): any {
 
         try {
             const usersData = yield call(VKApi.getUsers, usersSocketResponse.map(user => user.vkId))
@@ -98,7 +98,7 @@ export default class VKApi {
         return []
     }
 
-    static call = function* (method: string, params: any) {
+    static call = function* (method: string, params: any): any {
         
         const access_token = yield select(accessTokenSelector)
 

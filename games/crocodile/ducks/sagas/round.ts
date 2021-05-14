@@ -8,7 +8,7 @@ export function* startRoundEmitSaga() {
     yield call(socketEmit, `${socketPrefix}/start-round`, { })
 }
 
-export function* startRoundSocketEvent() {
+export function* startRoundSocketEvent(): any {
 
     yield put({
         type: START_ROUND_SUCCESS

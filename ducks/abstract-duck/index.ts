@@ -57,7 +57,7 @@ export const stateSelector = (state: any) => state[moduleName] as MainEntity
 ]*/
 
 function* defaultSaga() {
-    return yield true
+    return true
 }
 
 export function* saga() {

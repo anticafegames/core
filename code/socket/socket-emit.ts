@@ -24,7 +24,7 @@ export function* socketEmit(event: string, data: any, isProtectedEvent: boolean 
     })
 }
 
-function* protectedData(data: any) {
+function* protectedData(data: any): any {
     const token = yield select(anticafeTokenSelector)
     data['token'] = token
 }

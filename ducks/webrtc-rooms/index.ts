@@ -117,7 +117,7 @@ export function* loadRoomsSaga() {
     yield call(socketEmit, 'rooms', data)
 }
 
-export function* loadRoomsSocketSaga({ payload }: any) {
+export function* loadRoomsSocketSaga({ payload }: any): any {
 
     const { rooms } = payload
     const oldRooms = yield select(roomsSelector)

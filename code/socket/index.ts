@@ -7,8 +7,9 @@ import { SOCKET_EMIT, SOCKET_CONNECT_SUCCESS, socketSelector, socketEventsSelect
 
 import { todo, infoMessage } from '../messages'
 import { iSocketType } from './interfaces'
+import { Socket } from 'dgram'
 
-export function* getSocket() {
+export function* getSocket(): any {
 
     const socketType = getSocketType()
 
@@ -22,7 +23,7 @@ export function* getSocket() {
     return yield socket
 }
 
-export function getSocketType() {
+export function getSocketType(): any {
 
     let socketType: iSocketType = {
         selector: socketSelector,

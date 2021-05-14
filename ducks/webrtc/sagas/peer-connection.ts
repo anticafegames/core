@@ -7,7 +7,7 @@ import { ADD_PEER_CONNECTION_REQUEST } from ".."
 import { serverConfiguration } from "../../../config/webrtc-config"
 import { todo } from "../../../code/messages"
 
-export function* createConnection(userId: string) {
+export function* createConnection(userId: string): any {
     
     todo('Ревлизовано RTCPeerConnection, нужно сделать второе тоже', 'webrtc/createOffer')
 

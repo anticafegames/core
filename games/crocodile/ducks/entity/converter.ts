@@ -23,7 +23,7 @@ export function* convertResponceGameUser(gameUsersResponce: iGameUserResponce[])
         let itIsMe = false
 
         if(responceUser.userId === user.id) {
-            userEntity = user.roomPeerEntity,
+            userEntity = user.roomPeerEntity
             itIsMe = true
         }
 
@@ -79,7 +79,7 @@ export function* convertReconnectStateResponce(state: iReconnectStateResponce) {
     }
 }
 
-export function* settingsToRequest() {
+export function* settingsToRequest(): any {
 
     const settings = yield select(settingsParamsSelector)
     const teamEntities = yield select(teamsSelector)

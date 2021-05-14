@@ -26,7 +26,7 @@ const socketActions: iSocketAction[] = [
     }
 ] 
 
-export function* bindSocketEvents() {
+export function* bindSocketEvents(): any {
     return yield call(bindEvents, socketActions)
 }
 

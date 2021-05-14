@@ -10,7 +10,7 @@ import { iTeam } from '../entity/team-entity'
 import { convertResponceTeams } from '../entity/converter'
 import { showCrocodileModal } from '../../modal-windows'
 
-export function* prepareStartSaga({ payload }: any) {
+export function* prepareStartSaga({ payload }: any): any {
 
     let { state, settings, teams } = payload
     teams = yield call(convertResponceTeams, teams)
@@ -31,7 +31,7 @@ export function* addTeamEmitSaga() {
     yield call(socketEmit, `${socketPrefix}/add-team`, { })
 }
 
-export function* addTeamSocketEvent({ payload }: any) {
+export function* addTeamSocketEvent({ payload }: any): any {
 
     const { error, result } = payload
 
@@ -43,7 +43,7 @@ export function* addTeamSocketEvent({ payload }: any) {
     yield put({ type: ADD_TEAM_SUCCESS, payload: { team: result } })
 }
 
-export function* loadPacksEmitSaga() {
+export function* loadPacksEmitSaga(): any {
 
     const packs = yield select(packsSelector)
     if(packs) return
@@ -78,7 +78,7 @@ export function* deleteTeamSagaEmit({ payload }: any) {
     yield call(socketEmit, `${socketPrefix}/delete-team`, { team })
 }
 
-export function* deleteTeamSocketEvent({ payload }: any) {
+export function* deleteTeamSocketEvent({ payload }: any): any {
 
     const { error, result, teamId } = payload
 

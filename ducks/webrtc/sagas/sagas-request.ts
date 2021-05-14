@@ -48,7 +48,7 @@ export function* addChannelSaga({ payload }: any) {
     infoMessage(`Добавили channel. UserId: ${userId}`)
 }
 
-export function* leavePeerSaga({ payload }: any) {
+export function* leavePeerSaga({ payload }: any): any {
     
     const { userId } = payload
     let peer = yield select(peerSelector(userId))

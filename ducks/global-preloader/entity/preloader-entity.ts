@@ -16,7 +16,7 @@ const defaultParams: iPreloader = {
 export default class PreloaderEntity extends Record(defaultParams) {
 
     constructor(params?: iPreloader) {
-        params ? super(params) : params
+        params ? super(params) : super()
     } 
 
     get hidePreloaderSagaKey() {

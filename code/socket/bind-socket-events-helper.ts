@@ -9,7 +9,7 @@ import { getSocket, getSocketType } from './index'
 import { infoMessage, todo } from '../messages'
 import { iSocketType } from './interfaces'
 
-export function* bindSocketEvents(socketActions: iSocketAction[]) {
+export function* bindSocketEvents(socketActions: iSocketAction[]): any {
     
     const filteredActions = yield call(filterSocketActions, socketActions)
     let socket = yield call(getSocket)
@@ -71,11 +71,11 @@ export function* waitBindSocket(key: string) {
     return
 }
 
-function* createEventsChannels(actions: iSocketAction[], socket: SocketIOClient.Socket) {
+function* createEventsChannels(actions: iSocketAction[], socket: SocketIOClient.Socket): any {
     return yield all(actions.map(action => createEventsChannel(action, socket)))
 }
 
-function* createEventsChannel(action: iSocketAction, socket: SocketIOClient.Socket) {
+function* createEventsChannel(action: iSocketAction, socket: SocketIOClient.Socket): any {
     const channel = yield call(eventChannel, (emit: any) => bindSocketAction(action, socket, emit))
     yield spawn(listenSocketEvent, action, channel)
     yield call(addSocketEvents, [action.sagaKey])

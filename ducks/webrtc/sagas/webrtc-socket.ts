@@ -10,7 +10,7 @@ import { reconnectConnectionRecever } from './reconnect'
 import Toasts from "../../../code/alerts/toast"
 import createOfferSaga from "./create-offer"
 
-export default function* webRtcSocketEventSaga(data: any) {
+export default function* webRtcSocketEventSaga(data: any): any {
 
     const { type, desc, userId, error } = data.payload
 
@@ -59,7 +59,7 @@ export default function* webRtcSocketEventSaga(data: any) {
     }
 }
 
-export function* findConnection(userId: string) {
+export function* findConnection(userId: string): any {
 
     if (userId === 'presenter') {
 

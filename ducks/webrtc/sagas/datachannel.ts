@@ -5,7 +5,7 @@ import { todo, infoMessage, errorMessage } from "../../../code/messages"
 import { getSocketResult, webrtcSocketEmit } from "../../../code/webrtc"
 import { addChannelSaga } from "./sagas-request"
 
-export function* listenOnDataChannel(connection: RTCPeerConnection, userId: string) {
+export function* listenOnDataChannel(connection: RTCPeerConnection, userId: string): any {
 
     todo('Закрыть канал, когда нашли', 'listenOnIceCandidate')
 
@@ -18,7 +18,7 @@ export function* listenOnDataChannel(connection: RTCPeerConnection, userId: stri
     yield fork(listen, channel, userId)
 }
 
-export function* listen(channel: any, userId: string) {
+export function* listen(channel: any, userId: string): any {
 
     while (true) {
         const event = yield take(channel)

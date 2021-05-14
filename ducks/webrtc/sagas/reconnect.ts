@@ -61,7 +61,7 @@ export function* reconnectConnectionSender(userId: string) {
     yield call(webrtcSocketEmit, data)
 }
 
-export function* reconnectConnectionRecever(userId: string, mode: reconnectMode) {
+export function* reconnectConnectionRecever(userId: string, mode: reconnectMode): any {
 
     const room: iRoom = yield select(roomSelector)
 
@@ -87,7 +87,7 @@ export function* reconnectConnectionRecever(userId: string, mode: reconnectMode)
     yield call(createOffer, userId)
 }
 
-export function* listenChangeState(userId: string, connection: RTCPeerConnection) {
+export function* listenChangeState(userId: string, connection: RTCPeerConnection): any {
 
     const channel = yield eventChannel((emit: any) => {
         connection.oniceconnectionstatechange = emit(true)
@@ -103,7 +103,7 @@ export function* listenChangeState(userId: string, connection: RTCPeerConnection
     yield fork(_listenChangeState, channel, userId, connection)
 }
 
-export function* _listenChangeState(channel: any, userId: string, connection: RTCPeerConnection) {
+export function* _listenChangeState(channel: any, userId: string, connection: RTCPeerConnection): any {
 
     while (true) {
 

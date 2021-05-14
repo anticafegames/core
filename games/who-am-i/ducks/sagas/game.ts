@@ -6,7 +6,7 @@ import { socketPrefix, START_GAME_SUCCESS, SHOW_MY_NAME_SUCCESS, SHOW_NAME_SUCCE
 import { closeElement } from '../../../../ducks/modal'
 import Toasts from '../../../../code/alerts/toast'
 
-export function* startGameEmitSaga() {
+export function* startGameEmitSaga(): any {
 
     const IAmOwner = yield select(IAmOwnerSelector)
 
@@ -32,7 +32,7 @@ export function* showNameEmitSaga({ payload }: any) {
     yield call(socketEmit, `${socketPrefix}/show-name`, { userId })
 }
 
-export function* showNameSocketSaga({ payload }: any) {
+export function* showNameSocketSaga({ payload }: any): any {
 
     const { userId, name } = payload
 

@@ -38,7 +38,7 @@ export function* selectNameEmitSaga({ payload }: any) {
     yield call(socketEmit, `${socketPrefix}/select-name`, { name })
 }
 
-export function* selectNameSocketEventSaga({ payload }: any) {
+export function* selectNameSocketEventSaga({ payload }: any): any {
 
     const { error, userId, name, nameFilled } = payload
 
@@ -56,7 +56,7 @@ export function* selectNameSocketEventSaga({ payload }: any) {
     })
 }
 
-export function* randomNameEmitSaga() {
+export function* randomNameEmitSaga(): any {
 
     const gameState = yield select(gameStateSelector)
     if(gameState !== 'prepare') return

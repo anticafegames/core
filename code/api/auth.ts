@@ -9,7 +9,7 @@ import { apiUrl as baseURL } from '../../config/app-config'
 import LocalStorage from '../local-storage'
 import Router from '../common/router'
 
-export const authorizationHeader = function* (config: any) {
+export const authorizationHeader = function* (config: any): any {
 
     const isWaitAuthentication = yield select(waitAuthenticationSelector)
 
@@ -22,7 +22,7 @@ export const authorizationHeader = function* (config: any) {
     config.headers.Authorization = `Bearer ${token}`
 }
 
-export const refreshAccessToken = function* (request?: any) {
+export const refreshAccessToken = function* (request?: any): any {
 
     const refreshToken = yield call(LocalStorage.getObjectFromStorage, 'refresh_token')
 

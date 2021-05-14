@@ -27,7 +27,7 @@ const createLocalStream = async () => {
     return promise
 }
 
-export default function* createLocalStreamSaga() {
+export default function* createLocalStreamSaga(): any {
 
     const { streamResult, delayResult } = yield race({
         streamResult: call(createLocalStream),
@@ -71,7 +71,7 @@ export function* closeLocalStream() {
     yield put({type: CLOSE_LOCAL_STREAM_SUCCESS})
 }
 
-export function* waitLocalStream() {
+export function* waitLocalStream(): any {
     
     const localStream = yield select(localStreamSelector)
 

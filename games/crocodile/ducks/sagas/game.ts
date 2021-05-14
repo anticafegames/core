@@ -8,12 +8,12 @@ import Toasts from '../../../../code/alerts/toast'
 import { convertResponceTeams, settingsToRequest } from '../entity/converter'
 import { settings } from 'cluster'
 
-export function* startGameEmitSaga() {
+export function* startGameEmitSaga(): any {
     const data = yield call(settingsToRequest)
     yield call(socketEmit, `${socketPrefix}/start-game`, data)
 }
 
-export function* startGameSocketSaga({ payload }: any) {
+export function* startGameSocketSaga({ payload }: any): any {
 
     const { error, result } = payload
     

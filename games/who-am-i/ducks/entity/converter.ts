@@ -21,7 +21,7 @@ export function* convertResponceGameUser(gameUsersResponce: iGameUserResponce[])
         let itIsMe = false
 
         if(responceUser.userId === user.id) {
-            userEntity = user.roomPeerEntity,
+            userEntity = user.roomPeerEntity
             itIsMe = true
         }
 

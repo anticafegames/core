@@ -76,7 +76,7 @@ export const isAuthorizedSelector = createSelector(
 *   Sagas
 */
 
-export function* loadUserSaga() {
+export function* loadUserSaga(): any {
 
     const vkUserId = yield select(vkUserIdSelector)
 

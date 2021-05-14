@@ -108,7 +108,7 @@ export function unbindListenLogs() {
 *   Sagas
 */
 
-export function* loadSiteInfoSocketSaga() {
+export function* loadSiteInfoSocketSaga(): any {
 
     try {
 
@@ -161,7 +161,7 @@ export function* loadSiteInfoSocketSaga() {
     yield call(hidePreloader, 'admin-load-site-info')
 }
 
-export function* listenLogsSaga() {
+export function* listenLogsSaga(): any {
 
     const socketAction: iSocketAction = {
         socketKey: `${socketEventPrefix}/log`,

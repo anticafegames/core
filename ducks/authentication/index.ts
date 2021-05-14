@@ -1,16 +1,15 @@
 import { appName } from '../../config/app-config'
 import { createSelector } from 'reselect'
 
-import { Record, OrderedMap, List } from 'immutable'
 import { call, put, takeEvery, all, select, take, fork } from 'redux-saga/effects'
-
-declare const VK: any
 
 import MainEntity, { iAuthentication } from './entity/main-entity'
 import Auth from '../../code/api/vk-api/vk-api-helper'
 import { bindSocketEvents } from '../../code/socket/bind-socket-events-helper'
 import { iSocketAction } from '../socket/entity/interface'
 import { hidePreloader } from '../global-preloader'
+
+declare const VK: any
 
 /*
 *   Contstants 
@@ -113,7 +112,7 @@ const socketActions: iSocketAction[] = [
     }
 ]
 
-export function* logInSaga() {
+export function* logInSaga(): any {
 
     yield call(Auth.waitAuthentication, false, false)
 

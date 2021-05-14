@@ -7,6 +7,6 @@ type WebRtcSocketType = 'presenter' | 'viewer' | 'stop' | 'iceCandidate' | 'reco
 
 export const getSocketResult = (type: WebRtcSocketType, userId: string, desc: any): iSocketResultWebRtcData => ({ type, userId, desc })
 
-export const webrtcSocketEmit = function* (data: iSocketResultWebRtcData) { 
+export const webrtcSocketEmit = function* (data: iSocketResultWebRtcData): any { 
     return yield call(socketEmit, 'webrtc', data) 
 }

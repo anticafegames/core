@@ -97,7 +97,7 @@ export function* addGameDataSaga({ payload }: any) {
     }
 }
 
-export function* previewToAddDataSaga({ payload }: any) {
+export function* previewToAddDataSaga({ payload }: any): any {
 
     const { gameKey } = payload
 

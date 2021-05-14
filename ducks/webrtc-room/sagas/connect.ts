@@ -28,7 +28,7 @@ import { createFakeConnectionSaga, createFakeRoomConnectionsSaga } from '../../w
 
 declare var window: any
 
-export function* roomConnectSocketRequestSaga({ payload }: any) {
+export function* roomConnectSocketRequestSaga({ payload }: any): any {
 
     try {
 
@@ -60,7 +60,7 @@ export function* roomConnectSocketRequestSaga({ payload }: any) {
     }
 }
 
-export function* roomConnectSocketSuccessSaga({ payload }: any) {
+export function* roomConnectSocketSuccessSaga({ payload }: any): any {
 
     let { error, result, mode } = payload
 
@@ -122,7 +122,7 @@ export function* roomConnectSocketSuccessSaga({ payload }: any) {
     yield call(hidePreloader, 'connet_room')
 }
 
-export function* knockOnRoomEmitSaga({ payload }: any) {
+export function* knockOnRoomEmitSaga({ payload }: any): any {
 
     const { roomId } = payload
 
@@ -139,7 +139,7 @@ export function* knockOnRoomEmitSaga({ payload }: any) {
     Toasts.messageToast('Отправлен запрос на присоединение к комнате')
 }
 
-export function* roomJoinSocketEventSaga({ payload }: any) {
+export function* roomJoinSocketEventSaga({ payload }: any): any {
 
     const { userId: id, vkId } = payload
 
@@ -212,7 +212,7 @@ export function* kickFromRoomSaga() {
     yield put({ type: CLOSE_LOCAL_STREAM_REQUEST })
 }
 
-export function* checkReconnectRoom() {
+export function* checkReconnectRoom(): any {
 
     const pathname = yield select(pathnameSelector)
     if (ignoreReconnect(pathname)) return
@@ -229,7 +229,7 @@ export function* checkReconnectRoom() {
 
     yield fork(showGlobalPreloader, 'checkReconnectRoom', 'connet_room', 0, true)
 
-    const error = function* (message: string) {
+    const error = function* (message: string): any {
         Toasts.messageToast(message)
         return yield call(hidePreloader, 'connet_room')
     }
